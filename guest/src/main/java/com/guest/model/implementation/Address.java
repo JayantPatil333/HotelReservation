@@ -6,6 +6,15 @@ public class Address implements IAddress {
     private String street;
     private String location;
     private String city;
+    private Long addressId;
+
+    public void setAddressId(Long addressId) {
+        this.addressId = addressId;
+    }
+
+    public Long getAddressId() {
+        return addressId;
+    }
 
     public String getStreet() {
         return street;

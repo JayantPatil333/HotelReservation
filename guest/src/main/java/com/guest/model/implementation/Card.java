@@ -2,7 +2,6 @@ package com.guest.model.implementation;
 
 import com.guest.model.ICard;
 
-import java.util.List;
 
 public class Card implements ICard {
     private String cardNumber;

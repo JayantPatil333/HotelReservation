@@ -8,19 +8,15 @@ import com.hotel.model.IReservation;
 import com.hotel.model.IRoom;
 import com.hotel.model.implementation.Hotel;
 import com.hotel.model.implementation.Reservation;
-import com.hotel.model.implementation.Room;
 import com.hotel.proxy.GuestInformationProxy;
-import com.hotel.proxy.model.Guest;
+import com.hotel.proxy.model.IGuest;
+import com.hotel.proxy.model.implementation.Guest;
 import com.hotel.repository.HotelRepository;
 import com.hotel.repository.ReservationRepository;
 import com.hotel.services.IHotelService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;
@@ -52,7 +48,7 @@ public class HotelService implements IHotelService {
         return imapper.mapHotelDTOToIHotel(saved);
     }
 
-    public List<IHotel> getHotelsByCityAndDateRange(String cityName, Date fromDate, Date toDate){
+    /*public List<IHotel> getHotelsByCityAndDateRange(String cityName, Date fromDate, Date toDate){
         List<IHotel> resultingHotels =  new ArrayList();
         List<HotelDTO> allHotels = (List<HotelDTO>) hotelRepository.findAll();
         for(HotelDTO hotelDTO : allHotels){
@@ -60,7 +56,7 @@ public class HotelService implements IHotelService {
                 resultingHotels.add(imapper.mapHotelDTOToIHotel(hotelDTO));
         }
         return resultingHotels;
-    }
+    }*/
 
     @Transactional(Transactional.TxType.REQUIRES_NEW)
     public String confirmReservation(Long reservationId)
@@ -76,7 +72,7 @@ public class HotelService implements IHotelService {
     public List<IReservation> getReservationByGuestIdPerHotel(Long hotelId, Long guestId ){
         Optional<HotelDTO> hotelDTO = hotelRepository.findById(hotelId);
         if(hotelDTO.isPresent()){
-            List<IReservation> reservations = hotelDTO.get().getReservations().stream().filter(reservationDTO -> reservationDTO.getGuest().getGuestId() == guestId)
+            List<IReservation> reservations = hotelDTO.get().getReservations().stream().filter(reservationDTO -> reservationDTO.getGuestId() == guestId)
                     .map(imapper::mapReservationDTOToIReservation).collect(Collectors.toList());
             return reservations;
         }
@@ -105,9 +101,6 @@ public class HotelService implements IHotelService {
     public String reservationRequest(Long hotelId, IReservation reservation){
         Optional<HotelDTO> hotel = hotelRepository.findById(hotelId);
         if(hotel.isPresent()){
-            Long guestID = reservation.getGuest().getGuestId();
-            Guest guestResult = guestProxy.getGuest(guestID);
-            reservation.setGuest(imapper.mapGuestToIGuest(guestResult));
             reservation.setRoom(findAvailableRoom(imapper.mapHotelDTOToIHotel(hotel.get()), reservation.getFromDate(), reservation.getToDate()));
             hotel.get().getReservations().add(imapper.mapIReservationToReservationDTO(reservation));
             return "Reservation Request accepted.";
@@ -115,7 +108,7 @@ public class HotelService implements IHotelService {
         return "Reservation request rejected as Hotel information is wrong.";
     }
 
-    private boolean isRoomAvailableForDates(HotelDTO hotel, Date fromDate, Date toDate){
+    /*private boolean isRoomAvailableForDates(HotelDTO hotel, Date fromDate, Date toDate){
         Date dateToCheck = fromDate;
         while (dateToCheck.after(toDate) || dateToCheck.equals(toDate)){
             List<Long> reservedRooms = hotel.getReservationsByDate().get(dateToCheck);
@@ -125,7 +118,7 @@ public class HotelService implements IHotelService {
                 return false;
         }
         return true;
-    }
+    }*/
 
     private IRoom findAvailableRoom(IHotel hotel, Date fromDate, Date toDate){
 
@@ -146,4 +139,26 @@ public class HotelService implements IHotelService {
         }
         return null;
     }
+
+    public List<IHotel> getHotels(List<Long> hotelIds){
+        List<IHotel> hotels =  new ArrayList();
+        for(Long hotelId : hotelIds){
+            Optional<HotelDTO> hotel = hotelRepository.findById(hotelId);
+            if(hotel.isPresent()){
+                hotels.add(imapper.mapHotelDTOToIHotel(hotel.get()));
+            }
+        }
+        return hotels;
+    }
+
+    public IHotel getHotelById(Long hotelId){
+        IHotel hotel = new Hotel();
+        Optional<HotelDTO> hotelDTO =  hotelRepository.findById(hotelId);
+        if(hotelDTO.isPresent()){
+            hotel = imapper.mapHotelDTOToIHotel(hotelDTO.get());
+        }
+        return hotel;
+    }
+
+
 }

@@ -1,22 +1,48 @@
 package com.guest.dto;
 
+import javax.persistence.*;
 import java.util.Date;
 
+@Embeddable
+@Table(name = "Stay")
 public class StayDTO {
-    private HotelDTO hotel;
+
+    private Long stayId;
+
+    private Long hotelId;
+
+    /*@OneToOne
+    @JoinColumn(name = "hotelId")
+    private HotelDTO hotel;*/
     private Date fromDate;
     private Date toDate;
     private String paidBy;
     private boolean isCancelled;
     private String reasonToCancel;
 
-    public void setHotel(HotelDTO hotel) {
+    public Long getHotelId() {
+        return hotelId;
+    }
+
+    public void setHotelId(Long hotelId) {
+        this.hotelId = hotelId;
+    }
+
+    public Long getStayId() {
+        return stayId;
+    }
+
+    public void setStayId(Long stayId) {
+        this.stayId = stayId;
+    }
+
+    /*public void setHotel(HotelDTO hotel) {
         this.hotel = hotel;
     }
 
     public HotelDTO getHotel() {
         return hotel;
-    }
+    }*/
 
     public boolean isCancelled() {
         return isCancelled;

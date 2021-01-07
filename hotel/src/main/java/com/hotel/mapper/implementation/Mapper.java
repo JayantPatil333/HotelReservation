@@ -4,6 +4,7 @@ import com.hotel.dto.*;
 import com.hotel.mapper.IMapper;
 import com.hotel.model.*;
 import com.hotel.model.implementation.*;
+import com.hotel.proxy.model.IGuest;
 
 import java.util.stream.Collectors;
 public class Mapper implements IMapper {
@@ -17,7 +18,7 @@ public class Mapper implements IMapper {
         hotelDTO.setName(hotel.getName());
         hotelDTO.setPhoneNumber(hotel.getPhoneNumber());
         hotelDTO.setStarRatting(hotel.getStarRatting());
-        hotelDTO.setReservationsByDate(hotel.getReservationsByDate());
+        //hotelDTO.setReservationsByDate(hotel.getReservationsByDate());
         return hotelDTO;
     }
 
@@ -27,14 +28,14 @@ public class Mapper implements IMapper {
         reservationDTO.setState(iReservation.getState());
         reservationDTO.setFromDate(iReservation.getFromDate());
         reservationDTO.setToDate(iReservation.getToDate());
-        reservationDTO.setGuest(mapIGuestToGuestDTO(iReservation.getGuest()));
+        reservationDTO.setGuestId(iReservation.getGuestId());
         reservationDTO.setRoom(mapIRoomToRoomDTO(iReservation.getRoom()));
         return reservationDTO;
     }
 
     @Override
-    public IGuest mapGuestToIGuest(com.hotel.proxy.model.Guest guest) {
-        IGuest iGuest = new Guest();
+    public com.hotel.model.IGuest mapGuestToIGuest(com.hotel.proxy.model.IGuest guest) {
+        com.hotel.model.IGuest iGuest =  new Guest();
         iGuest.setName(guest.getName());
         iGuest.setGuestId(guest.getGuestId());
         iGuest.setContactNumber(guest.getContactNumber());
@@ -43,13 +44,13 @@ public class Mapper implements IMapper {
     }
 
 
-    private GuestDTO mapIGuestToGuestDTO(IGuest iGuest){
+    /*private GuestDTO mapIGuestToGuestDTO(IGuest iGuest){
         GuestDTO guestDTO = new GuestDTO();
         guestDTO.setGuestId(iGuest.getGuestId());
         guestDTO.setName(iGuest.getName());
         guestDTO.setContactNumber(iGuest.getContactNumber());
         return guestDTO;
-    }
+    }*/
 
     private RoomDTO mapIRoomToRoomDTO(IRoom iRoom)
     {
@@ -82,7 +83,7 @@ public class Mapper implements IMapper {
         iHotel.setAddress(mapAddressDTOToIAddress(hotelDTO.getAddress()));
         iHotel.setRooms(hotelDTO.getRooms().stream().map(this::mapRoomDTOToIRoom).collect(Collectors.toList()));
         iHotel.setReservations(hotelDTO.getReservations().stream().map(this::mapReservationDTOToIReservation).collect(Collectors.toList()));
-        iHotel.setReservationsByDate(hotelDTO.getReservationsByDate());
+        //iHotel.setReservationsByDate(hotelDTO.getReservationsByDate());
         return iHotel;
     }
 
@@ -105,21 +106,22 @@ public class Mapper implements IMapper {
         return iRoom;
     }
 
-    private IGuest mapGuestDTOToIGuest(GuestDTO guestDTO){
-        IGuest iGuest = new Guest();
+   /* private Long mapGuestDTOToIGuest(GuestDTO guestDTO){
+        Long iGuest = new Guest();
         if(guestDTO != null) {
             iGuest.setGuestId(guestDTO.getGuestId());
             iGuest.setContactNumber(guestDTO.getContactNumber());
             iGuest.setName(guestDTO.getName());
         }
         return iGuest;
-    }
+    }*/
 
     public IReservation mapReservationDTOToIReservation(ReservationDTO reservationDTO){
         IReservation iReservation = new Reservation();
         iReservation.setReservationId(reservationDTO.getReservationId());
         iReservation.setState(reservationDTO.getState());
-        iReservation.setGuest(mapGuestDTOToIGuest(reservationDTO.getGuest()));
+        iReservation.setGuestId(reservationDTO.getGuestId());
+        //iReservation.setGuest(mapGuestDTOToIGuest(reservationDTO.getGuest()));
         iReservation.setRoom(mapRoomDTOToIRoom(reservationDTO.getRoom()));
         iReservation.setFromDate(reservationDTO.getFromDate());
         iReservation.setToDate(reservationDTO.getToDate());

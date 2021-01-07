@@ -1,11 +1,14 @@
-package com.hotel.proxy.model;
+package com.reservation.proxy.model.guest.implementation;
 
-public class Guest {
+import com.reservation.proxy.model.guest.IGuest;
+
+public class Guest implements IGuest {
 
     private Long guestId;
-    private String Name;
+    private String name;
     private String email;
     private String contactNumber;
+    private int ratting;
 
     public Long getGuestId() {
         return guestId;
@@ -16,11 +19,11 @@ public class Guest {
     }
 
     public String getName() {
-        return Name;
+        return name;
     }
 
     public void setName(String name) {
-        Name = name;
+        this.name = name;
     }
 
     public String getEmail() {
@@ -39,13 +42,11 @@ public class Guest {
         this.contactNumber = contactNumber;
     }
 
-    @Override
-    public String toString() {
-        return "Guest{" +
-                "guestId=" + guestId +
-                ", Name='" + Name + '\'' +
-                ", email='" + email + '\'' +
-                ", contactNumber='" + contactNumber + '\'' +
-                '}';
+    public int getRatting() {
+        return ratting;
+    }
+
+    public void setRatting(int ratting) {
+        this.ratting = ratting;
     }
 }

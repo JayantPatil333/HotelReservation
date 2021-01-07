@@ -1,12 +1,10 @@
 package com.hotel.model.implementation;
 
+
 import com.hotel.model.IGuest;
 
-import javax.persistence.*;
-
-
 public class Guest implements IGuest {
-    private Long guestId;
+    private java.lang.Long guestId;
     private String name;
     private String contactNumber;
     private String email;
@@ -19,11 +17,11 @@ public class Guest implements IGuest {
     }
 
     public Guest(){}
-    public void setGuestId(Long guestId) {
+    public void setGuestId(java.lang.Long guestId) {
         this.guestId = guestId;
     }
 
-    public Long getGuestId() {
+    public java.lang.Long getGuestId() {
         return guestId;
     }
 

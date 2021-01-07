@@ -7,6 +7,15 @@ public class Hotel implements IHotel {
     private String name;
     private String contactNumber;
     private IAddress address;
+    private Long hotelId;
+
+    public void setHotelId(Long hotelId) {
+        this.hotelId = hotelId;
+    }
+
+    public Long getHotelId() {
+        return hotelId;
+    }
 
     public String getName() {
         return name;

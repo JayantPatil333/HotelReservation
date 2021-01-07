@@ -1,6 +1,5 @@
 package com.hotel.model.implementation;
 
-import com.hotel.model.IGuest;
 import com.hotel.model.IReservation;
 import com.hotel.model.IRoom;
 import java.util.Date;
@@ -9,13 +8,20 @@ import java.util.Objects;
 
 public class Reservation implements IReservation {
     private IRoom room;
-    private IGuest guest;
+    private Long guestId;
     private Date fromDate;
     private Date toDate;
-
     private Long reservationId;
-
     private String state;
+    private String roomType;
+
+    public String getRoomType() {
+        return roomType;
+    }
+
+    public void setRoomType(String roomType) {
+        this.roomType = roomType;
+    }
 
     public String getState() {
         return state;
@@ -34,12 +40,12 @@ public class Reservation implements IReservation {
         this.room = room;
     }
 
-    public IGuest getGuest() {
-        return guest;
+    public Long getGuestId() {
+        return guestId;
     }
 
-    public void setGuest(IGuest guest) {
-        this.guest = guest;
+    public void setGuestId(Long guestId) {
+        this.guestId = guestId;
     }
 
     public Date getFromDate() {

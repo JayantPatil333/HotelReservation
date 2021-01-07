@@ -2,8 +2,10 @@ package com.guest.dto;
 
 import com.guest.model.ICard;
 
+import javax.persistence.Embeddable;
 import java.util.List;
 
+@Embeddable
 public class CardDTO {
     private String cardNumber;
     private String expMonth;

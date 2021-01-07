@@ -1,6 +1,16 @@
 package com.guest.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.guest.model.implementation.Guest;
+
+import java.util.List;
+
+@JsonDeserialize(as = Guest.class)
 public interface IGuest {
+
+    public List<Long> getReservations();
+
+    public void setReservations(List<Long> reservations);
 
     public Long getGuestId();
 
@@ -18,11 +28,15 @@ public interface IGuest {
 
     public void setContactNumber(String contactNumber);
 
-    public IHistory getHistory() ;
-
-    public void setHistory(IHistory history) ;
-
     public int getRatting();
 
     public void setRatting(int ratting);
+
+    /*public List<IStay> getStayList();
+
+    public void setStayList(List<IStay> stayList);*/
+
+    public List<ICard> getCards();
+
+    public void setCards(List<ICard> cards);
 }

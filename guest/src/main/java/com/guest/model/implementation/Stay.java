@@ -12,6 +12,24 @@ public class Stay implements IStay {
     private String paidBy;
     private boolean isCancelled;
     private String reasonToCancel;
+    private Long stayId;
+    private Long hotelId;
+
+    public Long getHotelId() {
+        return hotelId;
+    }
+
+    public void setHotelId(Long hotelId) {
+        this.hotelId = hotelId;
+    }
+
+    public Long getStayId() {
+        return stayId;
+    }
+
+    public void setStayId(Long stayId) {
+        this.stayId = stayId;
+    }
 
     public boolean isCancelled() {
         return isCancelled;

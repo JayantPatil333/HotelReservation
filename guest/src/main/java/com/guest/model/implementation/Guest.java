@@ -1,26 +1,46 @@
-    package com.guest.model.implementation;
+package com.guest.model.implementation;
 
+import com.guest.model.ICard;
 import com.guest.model.IGuest;
-import com.guest.model.IHistory;
+import com.guest.model.IStay;
 
-import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
-@Entity
-@Table(name = "guest")
-@NamedQueries({
-        @NamedQuery(name = "findGuestById", query = "from Guest g where g.guestId = :id")
-})
+
 public class Guest implements IGuest {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long guestId;
     private String name;
     private String email;
     private String contactNumber;
-
-    private IHistory history;
     private int ratting;
+    private List<Long> reservations =  new ArrayList();
+    //private List<IStay> stayList =  new ArrayList();
+    private List<ICard> cards = new ArrayList();
+
+    public List<Long> getReservations() {
+        return reservations;
+    }
+
+    public void setReservations(List<Long> reservations) {
+        this.reservations = reservations;
+    }
+
+    public List<ICard> getCards() {
+        return cards;
+    }
+
+    public void setCards(List<ICard> cards) {
+        this.cards = cards;
+    }
+
+    /*public List<IStay> getStayList() {
+        return stayList;
+    }
+
+    public void setStayList(List<IStay> stayList) {
+        this.stayList = stayList;
+    }*/
 
     public Long getGuestId() {
         return guestId;
@@ -54,19 +74,24 @@ public class Guest implements IGuest {
         this.contactNumber = contactNumber;
     }
 
-    public IHistory getHistory() {
-        return history;
-    }
-
-    public void setHistory(IHistory history) {
-        this.history = history;
-    }
-
     public int getRatting() {
         return ratting;
     }
 
     public void setRatting(int ratting) {
         this.ratting = ratting;
+    }
+
+    @Override
+    public String toString() {
+        return "Guest{" +
+                "guestId=" + guestId +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", contactNumber='" + contactNumber + '\'' +
+                ", ratting=" + ratting +
+                ", reservations=" + reservations +
+                ", cards=" + cards +
+                '}';
     }
 }

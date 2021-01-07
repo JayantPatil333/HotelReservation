@@ -14,5 +14,8 @@ public interface IHotelService {
     List<IReservation> getAllReservationsByHotelId(Long hotelId);
     List<IReservation> getReservationByGuestIdPerHotel(Long hotelId, Long guestId );
     public String confirmReservation(Long reservationId);
-    public List<IHotel> getHotelsByCityAndDateRange(String cityName, Date fromDate, Date toDate);
+    //public List<IHotel> getHotelsByCityAndDateRange(String cityName, Date fromDate, Date toDate);
+
+    public List<IHotel> getHotels(List<Long> hotelIds);
+    public IHotel getHotelById(Long hotelId);
 }

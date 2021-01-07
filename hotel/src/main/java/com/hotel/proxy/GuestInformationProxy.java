@@ -1,8 +1,10 @@
 package com.hotel.proxy;
 
-import com.hotel.proxy.model.Guest;
+import com.hotel.proxy.model.IGuest;
+import com.hotel.proxy.model.implementation.Guest;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.context.annotation.Bean;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -11,5 +13,9 @@ import org.springframework.web.bind.annotation.*;
 public interface GuestInformationProxy {
 
     @RequestMapping(value = "/GuestService/guest/{guestId}", method = RequestMethod.GET)
-    public Guest getGuest(@PathVariable("guestId") Long guestId);
+    public IGuest getGuest(@PathVariable("guestId") Long guestId);
+
+    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<IGuest> getGuest(@RequestParam("guestId") Long guestId, @RequestParam("isHotelInfoRequired") boolean
+            isToFetchHotelInfo) ;
 }

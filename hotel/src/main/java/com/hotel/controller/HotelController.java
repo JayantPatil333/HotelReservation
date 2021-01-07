@@ -28,15 +28,15 @@ public class HotelController{
         return ResponseEntity.created(uri).body(response);
     }
 
-    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    /*@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<IHotel>> getHotelsByCityDateRange(@RequestParam String cityName, @RequestParam Date fromDate, @RequestParam Date toDate){
         List<IHotel> hotels = service.getHotelsByCityAndDateRange(cityName, fromDate,toDate);
         return ResponseEntity.ok(hotels);
-    }
+    }*/
 
     @RequestMapping(method = RequestMethod.POST, value = "/reservation", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> reservationRequest(@RequestBody IReservation reservation, @RequestParam("hotelId") Long hotelId){
-        return ResponseEntity.accepted().body(service.reservationRequest(hotelId, reservation)) ;
+    public String reservationRequest(@RequestBody IReservation reservation, @RequestParam("hotelId") Long hotelId){
+        return service.reservationRequest(hotelId, reservation) ;
     }
 
     @RequestMapping(value = "/cancelReservation", method = RequestMethod.PATCH)
@@ -50,15 +50,24 @@ public class HotelController{
     }
 
     @RequestMapping(value = "/reservationsByGuest", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<IReservation>> getReservationByGuest(@RequestParam("hotelId") Long hotelId,@RequestParam("guestId") Long guestId)
+    public List<IReservation> getReservationByGuest(@RequestParam("hotelId") Long hotelId,@RequestParam("guestId") Long guestId)
     {
         List<IReservation> reservations = service.getReservationByGuestIdPerHotel(hotelId, guestId);
-        return ResponseEntity.ok(reservations);
+        return reservations;
     }
 
     @RequestMapping(value = "/confirmReservation" , method = RequestMethod.PATCH)
-    public ResponseEntity<String> confirmReservation(@RequestParam("reservationId") Long reservationId){
-        return ResponseEntity.ok(service.confirmReservation(reservationId));
+    public String confirmReservation(@RequestParam("reservationId") Long reservationId){
+        return service.confirmReservation(reservationId);
     }
 
+    @RequestMapping(value = "/getHotels", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<IHotel> getHotels(@RequestParam("hotelIds") List<Long> hotelIds){
+        return service.getHotels(hotelIds);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public IHotel getHotelById(@RequestParam("hotelId") Long hotelId){
+        return service.getHotelById(hotelId);
+    }
 }

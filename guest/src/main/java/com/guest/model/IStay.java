@@ -1,8 +1,21 @@
 package com.guest.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.guest.model.implementation.Stay;
+
 import java.util.Date;
 
+@JsonDeserialize(as = Stay.class)
 public interface IStay {
+
+    public Long getHotelId();
+
+    public void setHotelId(Long hotelId);
+
+    public Long getStayId();
+
+    public void setStayId(Long stayId);
+
     public boolean isCancelled();
 
     public void setCancelled(boolean cancelled);
