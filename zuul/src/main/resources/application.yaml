@@ -1,0 +1,8 @@
+zuul:
+  routes:
+    GuestService:
+      path : /GuestService/**
+      url : http://localhost:8081
+    HotelService:
+      path: /HotelService/**
+      url: http://localhost:8082
