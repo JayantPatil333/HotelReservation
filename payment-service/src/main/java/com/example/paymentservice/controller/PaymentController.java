@@ -3,9 +3,7 @@ package com.example.paymentservice.controller;
 import com.example.paymentservice.model.ICard;
 import com.example.paymentservice.service.IPaymentService;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
 
@@ -17,7 +15,7 @@ public class PaymentController {
     private IPaymentService paymentService;
 
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public String doPayment(ICard card, double amount){
+    public String doPayment(@RequestBody ICard card,@RequestParam("amount") double amount){
         return paymentService.doPayment(card, amount);
     }
 

@@ -3,6 +3,7 @@ package com.reservation.controller;
 import com.reservation.model.IReservation;
 import com.reservation.proxy.model.guest.IGuest;
 import com.reservation.proxy.model.hotel.IHotel;
+import com.reservation.proxy.model.payment.ICard;
 import com.reservation.service.IReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -39,4 +40,10 @@ public class ReservationController {
     {
         return reservationService.confirmReservation(reservation);
     }
+
+    @RequestMapping(value = "/payment", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public String doPayment(@RequestBody ICard card,@RequestParam("amount") double amount){
+        return reservationService.doPayment(card, amount);
+    }
+
 }
