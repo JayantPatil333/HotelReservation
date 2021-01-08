@@ -24,4 +24,7 @@ public interface IHotelInformationProxy {
 
     @RequestMapping(value = "/HotelService/hotel/confirmReservation" , method = RequestMethod.PATCH)
     public String confirmReservation(@RequestParam("reservationId") Long reservationId);
+
+    /*@RequestMapping(value = "/HotelService/hotel/searchHotels", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<IHotel> searchHotels(@RequestParam String cityName, @RequestParam Date fromDate, @RequestParam Date toDate, String roomType);*/
 }

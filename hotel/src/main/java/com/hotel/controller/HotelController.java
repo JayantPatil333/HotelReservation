@@ -28,12 +28,6 @@ public class HotelController{
         return ResponseEntity.created(uri).body(response);
     }
 
-    /*@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<IHotel>> getHotelsByCityDateRange(@RequestParam String cityName, @RequestParam Date fromDate, @RequestParam Date toDate){
-        List<IHotel> hotels = service.getHotelsByCityAndDateRange(cityName, fromDate,toDate);
-        return ResponseEntity.ok(hotels);
-    }*/
-
     @RequestMapping(method = RequestMethod.POST, value = "/reservation", consumes = MediaType.APPLICATION_JSON_VALUE)
     public String reservationRequest(@RequestBody IReservation reservation, @RequestParam("hotelId") Long hotelId){
         return service.reservationRequest(hotelId, reservation) ;
@@ -69,5 +63,12 @@ public class HotelController{
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public IHotel getHotelById(@RequestParam("hotelId") Long hotelId){
         return service.getHotelById(hotelId);
+    }
+
+
+    @RequestMapping(value = "/searchHotels", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<IHotel> searchHotels(@RequestParam String cityName, @RequestParam Date fromDate, @RequestParam Date toDate, String roomType){
+        List<IHotel> hotels = service.searchHotels(cityName, fromDate, toDate, roomType);
+        return hotels;
     }
 }

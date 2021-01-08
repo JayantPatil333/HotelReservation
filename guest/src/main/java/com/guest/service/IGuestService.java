@@ -11,7 +11,7 @@ public interface IGuestService {
 
     public IGuest addNewGuest(IGuest guest);
 
-    public IGuest getGuest(Long id, boolean isToFetchHotelInfo);
+    public IGuest getGuest(Long id);
 
     public String addStayByGuest(Long guestId, Long stay);
 

@@ -27,14 +27,7 @@ public class GuestController {
 
     @RequestMapping(value = "/{guestId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<IGuest> getGuest(@PathVariable("guestId") Long guestId) {
-        IGuest guest = service.getGuest(guestId, true);
-        return ResponseEntity.ok(guest);
-    }
-
-    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<IGuest> getGuest(@RequestParam("guestId") Long guestId, @RequestParam("isHotelInfoRequired") boolean
-    isToFetchHotelInfo) {
-        IGuest guest = service.getGuest(guestId, isToFetchHotelInfo);
+        IGuest guest = service.getGuest(guestId);
         return ResponseEntity.ok(guest);
     }
 

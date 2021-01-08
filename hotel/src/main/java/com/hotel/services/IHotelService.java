@@ -18,4 +18,6 @@ public interface IHotelService {
 
     public List<IHotel> getHotels(List<Long> hotelIds);
     public IHotel getHotelById(Long hotelId);
+
+    public List<IHotel> searchHotels(String city, Date fromDate, Date toDate, String roomType );
 }

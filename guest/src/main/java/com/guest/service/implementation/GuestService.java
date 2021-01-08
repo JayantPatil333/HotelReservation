@@ -39,20 +39,10 @@ public class GuestService implements IGuestService {
         return mapper.mapGuestDTOToIGuest(savedGuest);
     }
 
-    public IGuest getGuest(Long id, boolean isToFetchHotelInfo) {
+    public IGuest getGuest(Long id) {
         Optional<GuestDTO> guest = repository.findById(id);
         if(guest.isPresent()){
            IGuest iGuest = mapper.mapGuestDTOToIGuest(guest.get());
-           /*if(isToFetchHotelInfo) {
-               List<Long> hotelIds = iGuest.getStayList().stream().map(IStay::getHotelId).collect(Collectors.toList());
-
-               List<IHotel> hotels = hotelProxy.getHotels(hotelIds);
-
-               for (IStay iStay : iGuest.getStayList()) {
-                   IHotel matchedHotel = hotels.stream().filter(iHotel -> iHotel.getHotelId() == iStay.getHotelId()).findFirst().get();
-                   iStay.setHotel(mapper.mapProxyHotelToIHotel(matchedHotel));
-               }
-           }*/
            return iGuest;
         }
 
@@ -72,7 +62,7 @@ public class GuestService implements IGuestService {
     public List<IGuest> getGuests(List<Long> guestIds ){
         List<IGuest> guests = new ArrayList();
         for(Long guestId : guestIds){
-            IGuest guest = getGuest(guestId, true);
+            IGuest guest = getGuest(guestId);
             guests.add(guest);
         }
         return guests;

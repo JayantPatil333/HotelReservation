@@ -48,16 +48,6 @@ public class HotelService implements IHotelService {
         return imapper.mapHotelDTOToIHotel(saved);
     }
 
-    /*public List<IHotel> getHotelsByCityAndDateRange(String cityName, Date fromDate, Date toDate){
-        List<IHotel> resultingHotels =  new ArrayList();
-        List<HotelDTO> allHotels = (List<HotelDTO>) hotelRepository.findAll();
-        for(HotelDTO hotelDTO : allHotels){
-            if(isRoomAvailableForDates(hotelDTO, fromDate, toDate))
-                resultingHotels.add(imapper.mapHotelDTOToIHotel(hotelDTO));
-        }
-        return resultingHotels;
-    }*/
-
     @Transactional(Transactional.TxType.REQUIRES_NEW)
     public String confirmReservation(Long reservationId)
     {
@@ -121,9 +111,6 @@ public class HotelService implements IHotelService {
     }*/
 
     private IRoom findAvailableRoom(IHotel hotel, Date fromDate, Date toDate){
-
-
-
         List<IRoom> reservedRooms = hotel.getReservations().stream().filter(iReservation -> iReservation.getFromDate().equals(fromDate))
                 .map(iReservation -> iReservation.getRoom()).collect(Collectors.toList());
 
@@ -160,5 +147,11 @@ public class HotelService implements IHotelService {
         return hotel;
     }
 
+    public List<IHotel> searchHotels(String city, Date fromDate, Date toDate, String roomType ){
+        List<HotelDTO> hotels = hotelRepository.findAll();
+        List<IHotel> outputHotels =  hotels.stream().filter(h -> h.getAddress().getCity().equals(city))
+                                    .map(imapper :: mapHotelDTOToIHotel).collect(Collectors.toList());
+        return outputHotels;
+    }
 
 }

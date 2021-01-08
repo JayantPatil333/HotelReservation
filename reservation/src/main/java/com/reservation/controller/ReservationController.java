@@ -9,6 +9,8 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
+import java.util.Date;
+import java.util.List;
 
 @RestController
 @RequestMapping("/reservation")
@@ -37,5 +39,4 @@ public class ReservationController {
     {
         return reservationService.confirmReservation(reservation);
     }
-
 }
