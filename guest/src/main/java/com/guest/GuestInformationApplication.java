@@ -8,6 +8,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @SpringBootApplication
 @EnableDiscoveryClient
 @EnableFeignClients
+//@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class GuestInformationApplication {
 
 	public static void main(String[] args) {

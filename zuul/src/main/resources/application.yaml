@@ -6,3 +6,7 @@ zuul:
     HotelService:
       path: /HotelService/**
       url: http://localhost:8082
+    ReservationService:
+      path: /ReservationService/**
+      url: http://localhost:8083
+  sensitive-headers: Cookie,Set-Cookie

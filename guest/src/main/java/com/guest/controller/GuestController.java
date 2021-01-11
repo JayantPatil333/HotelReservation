@@ -18,7 +18,9 @@ public class GuestController {
     @Inject
     private IGuestService service;
 
+
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    //@PreAuthorize("hasRole('USER')")
     public ResponseEntity<IGuest> addNewGuest(@RequestBody IGuest guest) {
         IGuest response = service.addNewGuest(guest);
         return ResponseEntity.created(URI.create(String.format("/guest/" + response.getGuestId())))
