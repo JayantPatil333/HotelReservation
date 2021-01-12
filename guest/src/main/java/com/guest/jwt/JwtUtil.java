@@ -1,11 +1,14 @@
-package com.zuul.jwt;
+package com.guest.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,7 +21,7 @@ public class JwtUtil {
 
     public String generateToken(UserDetails userDetails){
         Map<String, Object> claims =  new HashMap();
-        claims.put("authorities", userDetails.getAuthorities());
+        claims.put("Authorities", userDetails.getAuthorities());
         return createToken(claims, userDetails.getUsername());
     }
 
@@ -53,5 +56,9 @@ public class JwtUtil {
     public boolean isValidToken(String token, UserDetails userDetails){
         String userName = extractUsername(token);
         return userDetails.getUsername().equals(userName) && !isTokenExpired(token);
+    }
+
+    public Collection<? extends GrantedAuthority> extractAuthorities(String token){
+        return extractClaim(token, claims -> claims.get("authorities",Collection.class));
     }
 }

@@ -11,6 +11,7 @@ import com.reservation.proxy.model.guest.IGuest;
 import com.reservation.proxy.model.hotel.IHotel;
 import com.reservation.proxy.model.payment.ICard;
 import com.reservation.repository.IReservationRepository;
+import com.reservation.repository.implementation.ReservationRepository;
 import com.reservation.service.IReservationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +30,7 @@ public class ReservationService implements IReservationService {
     private IHotelInformationProxy hotelProxy;
 
     @Autowired
-    private IReservationRepository reservationRepository;
+    private ReservationRepository reservationRepository;
 
     @Autowired
     private IPaymentServiceProxy paymentServiceProxy;

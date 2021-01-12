@@ -6,6 +6,7 @@ import com.guest.service.IGuestService;
 import com.guest.service.implementation.GuestService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
@@ -20,7 +21,7 @@ public class GuestController {
 
 
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    //@PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('GUEST')")
     public ResponseEntity<IGuest> addNewGuest(@RequestBody IGuest guest) {
         IGuest response = service.addNewGuest(guest);
         return ResponseEntity.created(URI.create(String.format("/guest/" + response.getGuestId())))

@@ -5,13 +5,11 @@ import com.reservation.proxy.model.guest.IGuest;
 import com.reservation.proxy.model.hotel.IHotel;
 import com.reservation.proxy.model.payment.ICard;
 import com.reservation.service.IReservationService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
-import java.util.Date;
-import java.util.List;
 
 @RestController
 @RequestMapping("/reservation")
@@ -31,17 +29,20 @@ public class ReservationController {
     }
 
     @RequestMapping(value = "/request", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasRole('GUEST')")
     public String reservationRequest(@RequestBody IReservation reservation){
         return reservationService.requestForReservation(reservation);
     }
 
     @RequestMapping(value = "/confirm", method = RequestMethod.PATCH, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasRole('GUEST')")
     public String confirmReservation(@RequestBody IReservation reservation)
     {
         return reservationService.confirmReservation(reservation);
     }
 
     @RequestMapping(value = "/payment", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasRole('GUEST')")
     public String doPayment(@RequestBody ICard card,@RequestParam("amount") double amount){
         return reservationService.doPayment(card, amount);
     }

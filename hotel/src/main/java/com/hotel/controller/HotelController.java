@@ -6,6 +6,7 @@ import com.hotel.model.implementation.Hotel;
 import com.hotel.services.IHotelService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
@@ -21,6 +22,7 @@ public class HotelController{
     private IHotelService service;
 
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasRole('HOTEL')")
     public ResponseEntity<IHotel> addNewHotel(@RequestBody Hotel hotel)
     {
         IHotel response = service.addNewHotel(hotel);
@@ -29,6 +31,7 @@ public class HotelController{
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/reservation", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasRole('GUEST')")
     public String reservationRequest(@RequestBody IReservation reservation, @RequestParam("hotelId") Long hotelId){
         return service.reservationRequest(hotelId, reservation) ;
     }
