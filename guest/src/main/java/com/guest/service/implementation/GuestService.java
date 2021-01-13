@@ -1,24 +1,22 @@
 package com.guest.service.implementation;
 
 import com.guest.dto.GuestDTO;
-import com.guest.dto.StayDTO;
 import com.guest.mapper.IMapper;
 import com.guest.model.IGuest;
-import com.guest.model.IStay;
 import com.guest.proxy.IHotelInformationProxy;
-import com.guest.proxy.model.IHotel;
-import com.guest.repository.GuestRepository;
+import com.guest.repository.IGuestRepository;
+import com.guest.repository.implementation.GuestRepository;
 import com.guest.service.IGuestService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.inject.Inject;
+import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class GuestService implements IGuestService {
 
@@ -34,32 +32,28 @@ public class GuestService implements IGuestService {
     private IMapper mapper;
 
     public IGuest addNewGuest(IGuest guest) {
-        LOGGER.debug("Request to add new guest.{}"+guest);
+        LOGGER.debug("GuestService :: getGuest :: Request to add new guest.{}"+guest);
         GuestDTO savedGuest = repository.save(mapper.mapIGuestToGuestDTO(guest));
         return mapper.mapGuestDTOToIGuest(savedGuest);
     }
 
-    public IGuest getGuest(Long id) {
-        Optional<GuestDTO> guest = repository.findById(id);
-        if(guest.isPresent()){
-           IGuest iGuest = mapper.mapGuestDTOToIGuest(guest.get());
-           return iGuest;
-        }
-
-        return null;
+    public IGuest getGuest(Long id) throws EntityNotFoundException {
+        LOGGER.debug("GuestService :: getGuest :: Request to fetch guest with id "+id);
+        GuestDTO guest = repository.findById(id);
+        IGuest iGuest = mapper.mapGuestDTOToIGuest(guest);
+        LOGGER.debug("GuestService :: getGuest :: Guest information returned "+iGuest);
+        return iGuest;
     }
 
     @Transactional(Transactional.TxType.REQUIRES_NEW)
-    public String addStayByGuest(Long guestId, Long reservationId){
-        Optional<GuestDTO> guest = repository.findById(guestId);
-        if(guest.isPresent()){
-            guest.get().getReservations().add(reservationId);
-            return "Stay information stored.";
-        }
-        return "Guest information is not found.";
+    public String addStayByGuest(Long guestId, Long reservationId) throws EntityNotFoundException {
+        LOGGER.debug("GuestService :: addStayByGuest :: Guest requested for new stay, Guest ID "+guestId+" , stay ID "+reservationId);
+        GuestDTO guest = repository.findById(guestId);
+        guest.getReservations().add(reservationId);
+        return "Stay information stored.";
     }
 
-    public List<IGuest> getGuests(List<Long> guestIds ){
+    public List<IGuest> getGuests(List<Long> guestIds ) throws EntityNotFoundException {
         List<IGuest> guests = new ArrayList();
         for(Long guestId : guestIds){
             IGuest guest = getGuest(guestId);
@@ -67,5 +61,4 @@ public class GuestService implements IGuestService {
         }
         return guests;
     }
-
 }

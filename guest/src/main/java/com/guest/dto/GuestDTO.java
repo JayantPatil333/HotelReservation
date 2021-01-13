@@ -95,4 +95,13 @@ public class GuestDTO {
     public void setRatting(int ratting) {
         this.ratting = ratting;
     }
+
+    public GuestDTO(){}
+
+    public GuestDTO(Long guestId, String name, String email, String contactNumber) {
+        this.guestId = guestId;
+        this.name = name;
+        this.email = email;
+        this.contactNumber = contactNumber;
+    }
 }

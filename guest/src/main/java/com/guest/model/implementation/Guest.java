@@ -82,6 +82,15 @@ public class Guest implements IGuest {
         this.ratting = ratting;
     }
 
+    public Guest(){}
+
+    public Guest(Long guestId, String name, String email, String contactNumber) {
+        this.guestId = guestId;
+        this.name = name;
+        this.email = email;
+        this.contactNumber = contactNumber;
+    }
+
     @Override
     public String toString() {
         return "Guest{" +

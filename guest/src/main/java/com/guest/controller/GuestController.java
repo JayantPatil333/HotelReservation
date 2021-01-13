@@ -10,6 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
+import javax.persistence.EntityNotFoundException;
 import java.net.URI;
 import java.util.List;
 
@@ -29,6 +30,7 @@ public class GuestController {
     }
 
     @RequestMapping(value = "/{guestId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasRole('GUEST')")
     public ResponseEntity<IGuest> getGuest(@PathVariable("guestId") Long guestId) {
         IGuest guest = service.getGuest(guestId);
         return ResponseEntity.ok(guest);
@@ -40,7 +42,7 @@ public class GuestController {
     }
 
     @RequestMapping(value = "/getGuests", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<IGuest>> getGuests(List<Long> guestIds){
+    public ResponseEntity<List<IGuest>> getGuests(@RequestParam("guestId") List<Long> guestIds){
         return ResponseEntity.ok(service.getGuests(guestIds));
     }
 }
