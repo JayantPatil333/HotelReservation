@@ -4,7 +4,6 @@ import com.hotel.dto.*;
 import com.hotel.mapper.IMapper;
 import com.hotel.model.*;
 import com.hotel.model.implementation.*;
-import com.hotel.proxy.model.IGuest;
 
 import java.util.stream.Collectors;
 public class Mapper implements IMapper {
@@ -18,7 +17,6 @@ public class Mapper implements IMapper {
         hotelDTO.setName(hotel.getName());
         hotelDTO.setPhoneNumber(hotel.getPhoneNumber());
         hotelDTO.setStarRatting(hotel.getStarRatting());
-        //hotelDTO.setReservationsByDate(hotel.getReservationsByDate());
         return hotelDTO;
     }
 
@@ -33,7 +31,7 @@ public class Mapper implements IMapper {
         return reservationDTO;
     }
 
-    @Override
+    /*@Override
     public com.hotel.model.IGuest mapGuestToIGuest(com.hotel.proxy.model.IGuest guest) {
         com.hotel.model.IGuest iGuest =  new Guest();
         iGuest.setName(guest.getName());
@@ -41,7 +39,7 @@ public class Mapper implements IMapper {
         iGuest.setContactNumber(guest.getContactNumber());
         iGuest.setEmail(guest.getEmail());
         return iGuest;
-    }
+    }*/
 
 
     /*private GuestDTO mapIGuestToGuestDTO(IGuest iGuest){
@@ -68,7 +66,7 @@ public class Mapper implements IMapper {
         addressDTO.setArea(address.getArea());
         addressDTO.setCity(address.getCity());
         addressDTO.setStreet(address.getStreet());
-
+        addressDTO.setPin(address.getPin());
         return addressDTO ;
     }
 
@@ -93,6 +91,7 @@ public class Mapper implements IMapper {
         iAddress.setArea(addressDTO.getArea());
         iAddress.setCity(addressDTO.getCity());
         iAddress.setStreet(addressDTO.getStreet());
+        iAddress.setPin(addressDTO.getPin());
         return  iAddress;
     }
 

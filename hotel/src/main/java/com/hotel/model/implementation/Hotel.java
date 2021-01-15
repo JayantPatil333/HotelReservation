@@ -69,4 +69,16 @@ public class Hotel implements IHotel {
     public void setReservations(List<IReservation> reservations) {
         this.reservations = reservations;
     }
+
+    public Hotel() {
+
+    }
+
+    public Hotel(Long hotelId, String name, String phoneNumber, int starRatting, IAddress address) {
+        this.hotelId = hotelId;
+        this.name = name;
+        this.phoneNumber = phoneNumber;
+        this.starRatting = starRatting;
+        this.address = address;
+    }
 }

@@ -1,16 +1,14 @@
 package com.guest.controller;
 
+import com.guest.model.ICard;
 import com.guest.model.IGuest;
-import com.guest.model.IStay;
 import com.guest.service.IGuestService;
-import com.guest.service.implementation.GuestService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
-import javax.persistence.EntityNotFoundException;
 import java.net.URI;
 import java.util.List;
 
@@ -37,12 +35,20 @@ public class GuestController {
     }
 
     @RequestMapping(value = "/addNewStay", method = RequestMethod.PATCH, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> addStayByGuest(@RequestParam("guestId") Long guestId, @RequestParam("reservationId") Long stay){
+    @PreAuthorize("hasRole('GUEST')")
+    public ResponseEntity<IGuest> addStayByGuest(@RequestParam("guestId") Long guestId, @RequestParam("reservationId") Long stay){
         return ResponseEntity.ok(service.addStayByGuest(guestId, stay));
     }
 
     @RequestMapping(value = "/getGuests", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<IGuest>> getGuests(@RequestParam("guestId") List<Long> guestIds){
         return ResponseEntity.ok(service.getGuests(guestIds));
+    }
+
+
+    @PreAuthorize("hasRole('GUEST')")
+    @RequestMapping(value = "/addNewCard", method = RequestMethod.PATCH, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<IGuest> addNewCard(@RequestParam("guestId") Long guestId,@RequestBody ICard card){
+        return ResponseEntity.ok(service.addNewCard(guestId, card));
     }
 }

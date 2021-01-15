@@ -37,16 +37,15 @@ public class RequestFilter extends OncePerRequestFilter
             grantedAuthorities = jwtUtil.extractAuthorities(token);
         }
 
-        Map<String, String> authority = (Map<String, String>) ((ArrayList)grantedAuthorities).get(0);
-
-        List<GrantedAuthority> authorities =  new ArrayList();
-
-        for(Map.Entry<String, String> entry : authority.entrySet()){
-            SimpleGrantedAuthority simpleGrantedAuthority =  new SimpleGrantedAuthority(entry.getValue());
-            authorities.add(simpleGrantedAuthority);
-        }
-
         if(grantedAuthorities != null && SecurityContextHolder.getContext().getAuthentication() == null){
+            Map<String, String> authority = (Map<String, String>) ((ArrayList)grantedAuthorities).get(0);
+
+            List<GrantedAuthority> authorities =  new ArrayList();
+
+            for(Map.Entry<String, String> entry : authority.entrySet()){
+                SimpleGrantedAuthority simpleGrantedAuthority =  new SimpleGrantedAuthority(entry.getValue());
+                authorities.add(simpleGrantedAuthority);
+            }
             UsernamePasswordAuthenticationToken token =  new UsernamePasswordAuthenticationToken(null, null, authorities);
             token.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
             SecurityContextHolder.getContext().setAuthentication(token);

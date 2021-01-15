@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface HotelRepository extends JpaRepository<HotelDTO, Long> {
+public interface IHotelRepository extends JpaRepository<HotelDTO, Long> {
 
     /*@Query("FROM HOTEL WHERE address_id in (SELECT ADDRESS_ID FROM ADDRESS WHERE CITY = ?1)")
     List<IHotel> findByCity(String city);*/

@@ -34,4 +34,13 @@ public class CardDTO {
     public void setExpYear(String expYear) {
         this.expYear = expYear;
     }
+
+    public CardDTO() {
+    }
+
+    public CardDTO(String cardNumber, String expMonth, String expYear) {
+        this.cardNumber = cardNumber;
+        this.expMonth = expMonth;
+        this.expYear = expYear;
+    }
 }

@@ -6,6 +6,15 @@ public class Address implements IAddress {
     private String street;
     private String area;
     private String city;
+    private String pin;
+
+    public String getPin() {
+        return pin;
+    }
+
+    public void setPin(String pin) {
+        this.pin = pin;
+    }
 
     public Address(){}
 
@@ -41,11 +50,13 @@ public class Address implements IAddress {
         this.city = city;
     }
 
-    /*public Address(String street, String area, String city) {
+    public Address(long addressId, String street, String area, String city, String pin) {
+        this.addressId = addressId;
         this.street = street;
         this.area = area;
         this.city = city;
-    }*/
+        this.pin = pin;
+    }
 
     @Override
     public String toString() {

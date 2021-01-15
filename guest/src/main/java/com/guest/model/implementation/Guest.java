@@ -2,7 +2,6 @@ package com.guest.model.implementation;
 
 import com.guest.model.ICard;
 import com.guest.model.IGuest;
-import com.guest.model.IStay;
 
 import java.util.ArrayList;
 import java.util.List;

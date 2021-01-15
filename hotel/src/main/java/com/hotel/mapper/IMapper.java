@@ -2,7 +2,6 @@ package com.hotel.mapper;
 
 import com.hotel.dto.HotelDTO;
 import com.hotel.dto.ReservationDTO;
-import com.hotel.model.IGuest;
 import com.hotel.model.IHotel;
 import com.hotel.model.IReservation;
 
@@ -15,5 +14,5 @@ public interface IMapper {
 
     ReservationDTO mapIReservationToReservationDTO(IReservation iReservation);
 
-    IGuest mapGuestToIGuest(com.hotel.proxy.model.IGuest guest);
+    //IGuest mapGuestToIGuest(com.hotel.proxy.model.IGuest guest);
 }

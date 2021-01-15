@@ -84,4 +84,14 @@ public class Reservation implements IReservation {
     public int hashCode() {
         return Objects.hash(reservationId);
     }
+
+    public Reservation(IRoom room, Long guestId, Date fromDate, Date toDate, Long reservationId, String state, String roomType) {
+        this.room = room;
+        this.guestId = guestId;
+        this.fromDate = fromDate;
+        this.toDate = toDate;
+        this.reservationId = reservationId;
+        this.state = state;
+        this.roomType = roomType;
+    }
 }

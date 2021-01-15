@@ -5,55 +5,66 @@ import javax.persistence.*;
 @Entity
 @Table(name = "Address")
 public class AddressDTO {
-        @Id
-        @GeneratedValue(strategy = GenerationType.AUTO)
-        private Long addressId;
-        private String street;
-        private String area;
-        private String city;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long addressId;
+    private String street;
+    private String area;
+    private String city;
+    private String pin;
 
-    public AddressDTO(){}
 
-        public String getStreet() {
+    public String getPin() {
+        return pin;
+    }
+
+    public void setPin(String pin) {
+        this.pin = pin;
+    }
+
+    public AddressDTO() {
+    }
+
+    public String getStreet() {
         return street;
     }
 
-        public Long getAddressId() {
+    public Long getAddressId() {
         return addressId;
     }
 
-        public void setAddressId(Long addressId) {
+    public void setAddressId(Long addressId) {
         this.addressId = addressId;
     }
 
-        public void setStreet(String street) {
+    public void setStreet(String street) {
         this.street = street;
     }
 
-        public String getArea() {
+    public String getArea() {
         return area;
     }
 
-        public void setArea(String area) {
+    public void setArea(String area) {
         this.area = area;
     }
 
-        public String getCity() {
+    public String getCity() {
         return city;
     }
 
-        public void setCity(String city) {
+    public void setCity(String city) {
         this.city = city;
     }
 
-    public AddressDTO(String street, String area, String city) {
+    public AddressDTO(long l, String street, String area, String city, String s) {
         this.street = street;
         this.area = area;
         this.city = city;
     }
 
-        @Override
-        public String toString() {
+    @Override
+    public String toString() {
         return "Address{" +
                 "street='" + street + '\'' +
                 ", area='" + area + '\'' +

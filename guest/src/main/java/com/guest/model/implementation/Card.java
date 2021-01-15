@@ -32,5 +32,12 @@ public class Card implements ICard {
         this.expYear = expYear;
     }
 
+    public Card(String cardNumber, String expMonth, String expYear) {
+        this.cardNumber = cardNumber;
+        this.expMonth = expMonth;
+        this.expYear = expYear;
+    }
 
+    public Card() {
+    }
 }

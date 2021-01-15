@@ -1,7 +1,9 @@
 package com.guest.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.guest.model.ICard;
 import com.guest.model.IGuest;
+import com.guest.model.implementation.Card;
 import com.guest.model.implementation.Guest;
 import com.guest.service.IGuestService;
 import org.junit.Before;
@@ -31,6 +33,8 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringRunner.class)
@@ -45,8 +49,6 @@ public class GuestControllerTest {
     @MockBean
     private IGuestService guestService;
 
-    private Logger LOGGER = LoggerFactory.getLogger(GuestControllerTest.class);
-
     @Before
     public void setup(){
         this.mockMvc = MockMvcBuilders
@@ -55,12 +57,10 @@ public class GuestControllerTest {
                 .build();
     }
 
-    IGuest guest = new Guest(1L, "Jayant","jayant@gmail.com","1234567");
-    //@WithMockUser("Guest")
+    private IGuest guest = new Guest(1L, "Jayant","jayant@gmail.com","1234567");
     @Test
     public void getGuest_ShouldReturnGuest() throws Exception {
         given(guestService.getGuest(1L)).willReturn(guest);
-        LOGGER.error("Inside method...");
         mockMvc.perform(MockMvcRequestBuilders.get("/guest/1")
                 .with(user("Guest")
                         .password("password")
@@ -70,7 +70,6 @@ public class GuestControllerTest {
 
     }
 
-    //@WithMockUser("Guest")
     @Test
     public void getGuest_EntityNotFoundException() throws Exception {
         given(guestService.getGuest(anyLong())).willThrow(new EntityNotFoundException("Entity Not found"));
@@ -82,26 +81,28 @@ public class GuestControllerTest {
 
     }
 
-    @WithMockUser("Guest")
     @Test
     public void addNewStay() throws Exception {
-        given(guestService.addStayByGuest(anyLong(), any())).willReturn("Stay added successfully.");
+        IGuest guest = new Guest(1L, "Jayant","jayant@gmail.com","1234567");
+        given(guestService.addStayByGuest(anyLong(), any())).willReturn(guest);
         mockMvc.perform(MockMvcRequestBuilders.patch("/guest/addNewStay")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .param("guestId", "1")
-                .param("reservationId","1"))
-                .andExpect(status().isOk())
-                .andExpect(content().string("Stay added successfully."));
+                .param("reservationId","1")
+                .with(user("Guest")
+                        .password("password")
+                        .roles("GUEST")))
+                .andExpect(status().isOk());
+                //.andExpect(content().string("Stay added successfully."));
     }
 
-    @WithMockUser("Guest")
     @Test
     public void addNewGuest() throws Exception {
         IGuest guest = new Guest(1L, "Jayant","jayant@gmail.com","1234567");
         given(guestService.addNewGuest(any())).willReturn(guest);
         ObjectMapper mapper =  new ObjectMapper();
         String json = mapper.writeValueAsString(guest);
-        mockMvc.perform(MockMvcRequestBuilders.post("/guest")
+        mockMvc.perform(post("/guest")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(json)
                 .with(user("Guest")
@@ -126,5 +127,25 @@ public class GuestControllerTest {
                 .andReturn();
 
         assertTrue(mvcResult.getResponse().getContentAsString().contains("Jayant"));
+    }
+
+
+    @Test
+    public void addNewCard() throws Exception {
+        ICard card =  new Card("1234567890765", "12","2014");
+        IGuest guest = new Guest(1L, "Jayant","jayant@gmail.com","1234567");
+        guest.getCards().add(card);
+        ObjectMapper mapper =  new ObjectMapper();
+        String json = mapper.writeValueAsString(card);
+        given(guestService.addNewCard(anyLong(), any())).willReturn(guest);
+        mockMvc.perform(patch("/guest/addNewCard")
+                        .param("guestId","1")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(json)
+                        .with(user("Guest")
+                                .password("password")
+                                .roles("GUEST")))
+                        .andExpect(status().isOk());
+
     }
 }

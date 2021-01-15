@@ -8,16 +8,12 @@ import com.hotel.model.IReservation;
 import com.hotel.model.IRoom;
 import com.hotel.model.implementation.Hotel;
 import com.hotel.model.implementation.Reservation;
-import com.hotel.proxy.GuestInformationProxy;
-import com.hotel.proxy.model.IGuest;
-import com.hotel.proxy.model.implementation.Guest;
-import com.hotel.repository.HotelRepository;
-import com.hotel.repository.ReservationRepository;
+import com.hotel.repository.implementation.HotelRepositoryImpl;
+import com.hotel.repository.implementation.ReservationRepositoryImpl;
 import com.hotel.services.IHotelService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;
@@ -28,14 +24,12 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class HotelService implements IHotelService {
-    @Autowired
-    private GuestInformationProxy guestProxy;
 
     @Autowired
-    private HotelRepository hotelRepository;
+    private HotelRepositoryImpl hotelRepository;
 
     @Autowired
-    private ReservationRepository reservationRepository;
+    private ReservationRepositoryImpl reservationRepository;
 
     @Inject
     private IMapper imapper;
@@ -50,53 +44,34 @@ public class HotelService implements IHotelService {
     }
 
     @Transactional(Transactional.TxType.REQUIRES_NEW)
-    public String confirmReservation(Long reservationId)
+    public IReservation confirmReservation(Long reservationId)
     {
-        Optional<ReservationDTO> reservationDTO = reservationRepository.findById(reservationId);
-        if(reservationDTO.isPresent()){
-            reservationDTO.get().setState("DONE");
-            return "Reservation Confirmed.";
-        }
-        return "Reservation information not found.";
+        ReservationDTO reservationDTO = reservationRepository.findReservationById(reservationId);
+        reservationDTO.setState("DONE");
+        return imapper.mapReservationDTOToIReservation(reservationDTO);
     }
 
     public List<IReservation> getReservationByGuestIdPerHotel(Long hotelId, Long guestId ){
-        Optional<HotelDTO> hotelDTO = hotelRepository.findById(hotelId);
-        if(hotelDTO.isPresent()){
-            List<IReservation> reservations = hotelDTO.get().getReservations().stream().filter(reservationDTO -> reservationDTO.getGuestId() == guestId)
+        HotelDTO hotelDTO = hotelRepository.findById(hotelId);
+        List<IReservation> reservations = hotelDTO.getReservations().stream().filter(reservationDTO -> reservationDTO.getGuestId() == guestId)
                     .map(imapper::mapReservationDTOToIReservation).collect(Collectors.toList());
-            return reservations;
-        }
-        return null;
+        return reservations;
     }
 
     @Transactional(Transactional.TxType.REQUIRES_NEW)
-    public String cancelReservation(Long hotelId, Long reservationId){
-        Optional<HotelDTO> hotel = hotelRepository.findById(hotelId);
-        if(hotel.isPresent()){
-            Optional<ReservationDTO> reservationToCancel = hotel.get().getReservations().stream().filter(reservation -> reservation.getReservationId() == reservationId).findFirst();
-            if(reservationToCancel.isPresent()){
-                reservationToCancel.get().setState("CANCELLED");
-                //Reservation reservation = reservationRepository.
-                return "Reservation cancelled ";
-            }
-        }
-        return "No reservation with id "+reservationId+" found.";
-    }
+    public IReservation cancelReservation(Long hotelId, Long reservationId){
+        ReservationDTO reservation = reservationRepository.findReservationById(reservationId);
+        reservation.setState("CANCELLED");
 
-    public void updateReservation(Reservation reservation){
-
+        return imapper.mapReservationDTOToIReservation(reservation);
     }
 
     @Transactional(Transactional.TxType.REQUIRES_NEW)
-    public String reservationRequest(Long hotelId, IReservation reservation){
-        Optional<HotelDTO> hotel = hotelRepository.findById(hotelId);
-        if(hotel.isPresent()){
-            reservation.setRoom(findAvailableRoom(imapper.mapHotelDTOToIHotel(hotel.get()), reservation.getFromDate(), reservation.getToDate()));
-            hotel.get().getReservations().add(imapper.mapIReservationToReservationDTO(reservation));
-            return "Reservation Request accepted.";
-        }
-        return "Reservation request rejected as Hotel information is wrong.";
+    public IReservation reservationRequest(Long hotelId, IReservation reservation){
+        HotelDTO hotel = hotelRepository.findById(hotelId);
+        reservation.setRoom(findAvailableRoom(imapper.mapHotelDTOToIHotel(hotel), reservation.getFromDate(), reservation.getToDate()));
+        hotel.getReservations().add(imapper.mapIReservationToReservationDTO(reservation));
+        return reservation;
     }
 
     /*private boolean isRoomAvailableForDates(HotelDTO hotel, Date fromDate, Date toDate){
@@ -117,39 +92,32 @@ public class HotelService implements IHotelService {
 
         Optional<IRoom> availableRoom = hotel.getRooms().stream().filter(room -> ! reservedRooms.contains(room)).findFirst();
 
-        return availableRoom.get();
+        return availableRoom.isPresent() ? availableRoom.get():null;
     }
 
     public List<IReservation> getAllReservationsByHotelId(Long hotelId){
-        Optional<HotelDTO> hotel = hotelRepository.findById(hotelId);
-        if(hotel.isPresent()){
-            return hotel.get().getReservations().stream().map(imapper:: mapReservationDTOToIReservation).collect(Collectors.toList());
-        }
-        return null;
+        HotelDTO hotel = hotelRepository.findById(hotelId);
+        return hotel.getReservations().stream().map(imapper:: mapReservationDTOToIReservation).collect(Collectors.toList());
     }
 
     public List<IHotel> getHotels(List<Long> hotelIds){
         List<IHotel> hotels =  new ArrayList();
         for(Long hotelId : hotelIds){
-            Optional<HotelDTO> hotel = hotelRepository.findById(hotelId);
-            if(hotel.isPresent()){
-                hotels.add(imapper.mapHotelDTOToIHotel(hotel.get()));
-            }
+            HotelDTO hotel = hotelRepository.findById(hotelId);
+            hotels.add(imapper.mapHotelDTOToIHotel(hotel));
         }
         return hotels;
     }
 
     public IHotel getHotelById(Long hotelId){
         IHotel hotel = new Hotel();
-        Optional<HotelDTO> hotelDTO =  hotelRepository.findById(hotelId);
-        if(hotelDTO.isPresent()){
-            hotel = imapper.mapHotelDTOToIHotel(hotelDTO.get());
-        }
+        HotelDTO hotelDTO =  hotelRepository.findById(hotelId);
+        hotel = imapper.mapHotelDTOToIHotel(hotelDTO);
         return hotel;
     }
 
     public List<IHotel> searchHotels(String city, Date fromDate, Date toDate, String roomType ){
-        List<HotelDTO> hotels = hotelRepository.findAll();
+        List<HotelDTO> hotels = hotelRepository.getAllHotels();
         List<IHotel> outputHotels =  hotels.stream().filter(h -> h.getAddress().getCity().equals(city))
                                     .map(imapper :: mapHotelDTOToIHotel).collect(Collectors.toList());
         return outputHotels;

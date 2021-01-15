@@ -2,9 +2,8 @@ package com.guest.service.implementation;
 
 import com.guest.dto.GuestDTO;
 import com.guest.mapper.IMapper;
+import com.guest.model.ICard;
 import com.guest.model.IGuest;
-import com.guest.proxy.IHotelInformationProxy;
-import com.guest.repository.IGuestRepository;
 import com.guest.repository.implementation.GuestRepository;
 import com.guest.service.IGuestService;
 import org.slf4j.Logger;
@@ -16,7 +15,6 @@ import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class GuestService implements IGuestService {
 
@@ -24,9 +22,6 @@ public class GuestService implements IGuestService {
 
     @Autowired
     private GuestRepository repository;
-
-    @Autowired
-    private IHotelInformationProxy hotelProxy;
 
     @Inject
     private IMapper mapper;
@@ -46,11 +41,11 @@ public class GuestService implements IGuestService {
     }
 
     @Transactional(Transactional.TxType.REQUIRES_NEW)
-    public String addStayByGuest(Long guestId, Long reservationId) throws EntityNotFoundException {
+    public IGuest addStayByGuest(Long guestId, Long reservationId) throws EntityNotFoundException {
         LOGGER.debug("GuestService :: addStayByGuest :: Guest requested for new stay, Guest ID "+guestId+" , stay ID "+reservationId);
         GuestDTO guest = repository.findById(guestId);
         guest.getReservations().add(reservationId);
-        return "Stay information stored.";
+        return mapper.mapGuestDTOToIGuest(guest);
     }
 
     public List<IGuest> getGuests(List<Long> guestIds ) throws EntityNotFoundException {
@@ -60,5 +55,13 @@ public class GuestService implements IGuestService {
             guests.add(guest);
         }
         return guests;
+    }
+
+    @Override
+    @Transactional(Transactional.TxType.REQUIRES_NEW)
+    public IGuest addNewCard(long guestId, ICard card) {
+        GuestDTO guestDTO = repository.findById(guestId);
+        guestDTO.getCards().add(mapper.mapICardToCardDTO(card));
+        return mapper.mapGuestDTOToIGuest(guestDTO);
     }
 }

@@ -90,4 +90,15 @@ public class HotelDTO {
         this.rooms = rooms;
     }
 
+    public HotelDTO() {
+
+    }
+
+    public HotelDTO(Long hotelId, String name, String phoneNumber, int starRatting, AddressDTO address) {
+        this.hotelId = hotelId;
+        this.name = name;
+        this.phoneNumber = phoneNumber;
+        this.starRatting = starRatting;
+        this.address = address;
+    }
 }

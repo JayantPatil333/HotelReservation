@@ -8,6 +8,9 @@ import com.hotel.model.implementation.Address;
 public interface IAddress {
     public String getStreet();
 
+    public String getPin();
+
+    public void setPin(String pin);
 
     public Long getAddressId();
 

@@ -31,6 +31,14 @@ public class ReservationDTO {
     public ReservationDTO() {
     }
 
+    public ReservationDTO(RoomDTO room, Long guestId, Date fromDate, Date toDate, Long reservationId, String state, String single) {
+        this.room = room;
+        this.guestId = guestId;
+        this.fromDate = fromDate;
+        this.toDate = toDate;
+        this.reservationId = reservationId;
+        this.state = state;
+    }
 
     public RoomDTO getRoom() {
         return room;
