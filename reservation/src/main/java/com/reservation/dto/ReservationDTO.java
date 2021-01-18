@@ -1,5 +1,6 @@
 package com.reservation.dto;
 
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -15,6 +16,18 @@ public class ReservationDTO {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long reservationId;
     private String state;
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "cardId")
+    private CardDTO card;
+
+    public CardDTO getCard() {
+        return card;
+    }
+
+    public void setCard(CardDTO card) {
+        this.card = card;
+    }
 
     public Date getFromDate() {
         return fromDate;
@@ -62,5 +75,18 @@ public class ReservationDTO {
 
     public void setState(String state) {
         this.state = state;
+    }
+
+    public ReservationDTO() {
+    }
+
+    public ReservationDTO(Date fromDate, Date toDate, Long guestId, Long hotelId, Long reservationId, String state, CardDTO card) {
+        this.fromDate = fromDate;
+        this.toDate = toDate;
+        this.guestId = guestId;
+        this.hotelId = hotelId;
+        this.reservationId = reservationId;
+        this.state = state;
+        this.card = card;
     }
 }

@@ -19,4 +19,9 @@ public class PaymentController {
         return paymentService.doPayment(card, amount);
     }
 
+    @RequestMapping(value = "/revert", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public String revertPayment(@RequestBody ICard card,@RequestParam("amount") double amount){
+        return paymentService.revertPayment(card, amount);
+    }
+
 }

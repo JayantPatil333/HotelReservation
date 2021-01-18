@@ -9,4 +9,9 @@ public class PaymentService implements IPaymentService {
         return "SUCCESS";
     }
 
+    @Override
+    public String revertPayment(ICard card, double amount) {
+        return "SUCCESS";
+    }
+
 }

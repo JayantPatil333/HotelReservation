@@ -1,11 +1,24 @@
-package com.reservation.proxy.model.payment.implementation;
+package com.reservation.dto;
 
-import com.reservation.proxy.model.payment.ICard;
+import javax.persistence.*;
 
-public class Card implements ICard {
+@Entity
+@Table(name = "Card")
+public class CardDTO {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long cardId;
     private String cardNumber;
     private String expMonth;
     private String expYear;
+
+    public Long getCardId() {
+        return cardId;
+    }
+
+    public void setCardId(Long cardId) {
+        this.cardId = cardId;
+    }
 
     public String getCardNumber() {
         return cardNumber;
@@ -40,11 +53,11 @@ public class Card implements ICard {
                 '}';
     }
 
-    public Card() {
+    public CardDTO() {
 
     }
 
-    public Card(String cardNumber, String expMonth, String expYear) {
+    public CardDTO(String cardNumber, String expMonth, String expYear) {
         this.cardNumber = cardNumber;
         this.expMonth = expMonth;
         this.expYear = expYear;

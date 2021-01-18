@@ -40,4 +40,14 @@ public class Address implements IAddress {
     public void setCity(String city) {
         this.city = city;
     }
+
+    public Address() {
+    }
+
+    public Address(Long addressId, String street, String area, String city) {
+        this.addressId = addressId;
+        this.street = street;
+        this.area = area;
+        this.city = city;
+    }
 }

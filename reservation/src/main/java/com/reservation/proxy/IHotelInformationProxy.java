@@ -4,6 +4,8 @@ import com.reservation.model.IReservation;
 import com.reservation.proxy.model.hotel.IHotel;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -25,6 +27,6 @@ public interface IHotelInformationProxy {
     @RequestMapping(value = "/HotelService/hotel/confirmReservation" , method = RequestMethod.PATCH)
     public String confirmReservation(@RequestParam("reservationId") Long reservationId);
 
-    /*@RequestMapping(value = "/HotelService/hotel/searchHotels", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<IHotel> searchHotels(@RequestParam String cityName, @RequestParam Date fromDate, @RequestParam Date toDate, String roomType);*/
+    @RequestMapping(value = "/HotelService/hotel/cancelReservation", method = RequestMethod.PATCH)
+    public ResponseEntity<IReservation> cancelReservation(@RequestParam("hotelId") Long hotelId, @RequestParam("reservationId") Long reservationId);
 }

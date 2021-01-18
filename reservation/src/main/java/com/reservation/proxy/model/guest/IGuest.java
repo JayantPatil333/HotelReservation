@@ -2,6 +2,9 @@ package com.reservation.proxy.model.guest;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.reservation.proxy.model.guest.implementation.Guest;
+import com.reservation.proxy.model.payment.ICard;
+
+import java.util.List;
 
 @JsonDeserialize(as = Guest.class)
 public interface IGuest {
@@ -25,4 +28,8 @@ public interface IGuest {
     public int getRatting();
 
     public void setRatting(int ratting);
+
+    public List<ICard> getCard();
+
+    public void setCard(List<ICard> card);
 }

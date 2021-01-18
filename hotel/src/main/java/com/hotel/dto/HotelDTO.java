@@ -26,14 +26,6 @@ public class HotelDTO {
     @JoinColumn(name = "reservationId")
     private List<ReservationDTO> reservations = new ArrayList();
 
-    /*private Map<Date, List<Long>> reservationsByDate =  new HashMap();
-    public Map<Date, List<Long>> getReservationsByDate() {
-        return reservationsByDate;
-    }
-
-    public void setReservationsByDate(Map<Date, List<Long>> reservationsByDate) {
-        this.reservationsByDate = reservationsByDate;
-    }*/
     public void setReservations(List<ReservationDTO> reservations) {
         this.reservations = reservations;
     }

@@ -3,23 +3,23 @@ package com.reservation.service.implementation;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.reservation.dto.ReservationDTO;
 import com.reservation.mapper.IMapper;
+import com.reservation.model.ICard;
 import com.reservation.model.IReservation;
 import com.reservation.proxy.IGuestInformationProxy;
 import com.reservation.proxy.IHotelInformationProxy;
 import com.reservation.proxy.IPaymentServiceProxy;
 import com.reservation.proxy.model.guest.IGuest;
 import com.reservation.proxy.model.hotel.IHotel;
-import com.reservation.proxy.model.payment.ICard;
-import com.reservation.repository.IReservationRepository;
+
 import com.reservation.repository.implementation.ReservationRepository;
 import com.reservation.service.IReservationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 
 import javax.inject.Inject;
-import java.util.Date;
-import java.util.List;
+import javax.transaction.Transactional;
 
 public class ReservationService implements IReservationService {
 
@@ -53,26 +53,54 @@ public class ReservationService implements IReservationService {
         return hotelProxy.reservationRequest(mapper.mapReservationDTOToIReservation(newReservation), reservation.getHotelId());
     }
 
-    public String confirmReservation(IReservation reservation){
+    @Transactional(Transactional.TxType.REQUIRES_NEW)
+    public IReservation confirmReservation(IReservation reservation){
         hotelProxy.confirmReservation(reservation.getReservationId());
         guestProxy.addStayByGuest(reservation.getGuestId(), reservation.getReservationId());
-        return "SUCCESS";
+        ReservationDTO reservationDTO = reservationRepository.getReservationById(reservation.getReservationId());
+        reservationDTO.setState("CONFIRMED");
+        return mapper.mapReservationDTOToIReservation(reservationDTO);
     }
 
     @HystrixCommand(fallbackMethod = "doPaymentFallBack")
-    public String doPayment(ICard card, double amount){
-        return paymentServiceProxy.doPayment(card, amount);
+    @Transactional(Transactional.TxType.REQUIRES_NEW)
+    public String doPayment(ICard card, double amount, Long reservationId){
+        ReservationDTO reservation = reservationRepository.getReservationById(reservationId);
+        reservation.setCard(mapper.mapICardToCardDTO(card));
+        return paymentServiceProxy.doPayment(mapper.mapICardToProxy(card), amount);
     }
 
     @SuppressWarnings("unused")
-    public String doPaymentFallBack(ICard card, double amount){
+    public String doPaymentFallBack(ICard card, double amount, Long reservationId){
         LOGGER.error("Payment Service is down while handling payment over card details: "+card);
 
         return "SUCCESS";
     }
 
-    /*public List<IHotel> searchForHotels(String city, Date fromDate, Date toDate, String roomType){
-        return hotelProxy.searchHotels(city, fromDate, toDate, roomType);
-    }*/
+    public IReservation getReservation(Long id, boolean isDetailsRequired){
+         ReservationDTO reservationDTO = reservationRepository.getReservationById(id);
+         IReservation reservation = mapper.mapReservationDTOToIReservation(reservationDTO);
+         if (isDetailsRequired){
+             IHotel hotel = getHotelById(reservationDTO.getHotelId());
+             IGuest guest = getGuestById(reservationDTO.getGuestId());
+             reservation.setHotel(hotel);
+             reservation.setGuest(guest);
+         }
+         return reservation;
+    }
 
+    @Override
+    @Transactional(Transactional.TxType.REQUIRES_NEW)
+    public IReservation cancelReservation(Long id, double amount) throws Exception {
+        ReservationDTO reservationDTO = reservationRepository.getReservationById(id);
+        ResponseEntity<IReservation> cancelReservation = hotelProxy.cancelReservation(reservationDTO.getHotelId(), reservationDTO.getReservationId());
+        if(cancelReservation.getStatusCode().is2xxSuccessful()){
+            paymentServiceProxy.revertPayment( mapper.mapICardToProxy(mapper.cardDTOToICard(reservationDTO.getCard())), amount);
+            reservationDTO.setState("CANCELLED");
+        }
+        else {
+            throw new Exception("Request get rejected by Hotel.");
+        }
+        return mapper.mapReservationDTOToIReservation(reservationDTO);
+    }
 }

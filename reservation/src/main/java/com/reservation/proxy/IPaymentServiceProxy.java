@@ -14,4 +14,7 @@ public interface IPaymentServiceProxy {
     @RequestMapping(value = "/PaymentService/payment",method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public String doPayment(@RequestBody ICard card,@RequestParam("amount") double amount);
 
+    @RequestMapping(value = "/PaymentService/payment/revert", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public String revertPayment(@RequestBody ICard card,@RequestParam("amount") double amount);
+
 }

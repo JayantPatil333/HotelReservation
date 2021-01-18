@@ -1,6 +1,9 @@
 package com.reservation.model.implementation;
 
+import com.reservation.model.ICard;
 import com.reservation.model.IReservation;
+import com.reservation.proxy.model.guest.IGuest;
+import com.reservation.proxy.model.hotel.IHotel;
 import jdk.nashorn.internal.runtime.JSErrorType;
 
 import java.util.Date;
@@ -13,6 +16,33 @@ public class Reservation implements IReservation {
     private Long reservationId;
     private String state;
     private String roomType;
+    private IGuest guest;
+    private IHotel hotel;
+    private ICard card;
+
+    public ICard getCard() {
+        return card;
+    }
+
+    public void setCard(ICard card) {
+        this.card = card;
+    }
+
+    public IGuest getGuest() {
+        return guest;
+    }
+
+    public void setGuest(IGuest guest) {
+        this.guest = guest;
+    }
+
+    public IHotel getHotel() {
+        return hotel;
+    }
+
+    public void setHotel(IHotel hotel) {
+        this.hotel = hotel;
+    }
 
     public Reservation(){}
 
@@ -70,5 +100,16 @@ public class Reservation implements IReservation {
 
     public void setState(String state) {
         this.state = state;
+    }
+
+    public Reservation(Date fromDate, Date toDate, Long guestId, Long hotelId, Long reservationId, String state, String roomType, ICard card) {
+        this.fromDate = fromDate;
+        this.toDate = toDate;
+        this.guestId = guestId;
+        this.hotelId = hotelId;
+        this.reservationId = reservationId;
+        this.state = state;
+        this.roomType = roomType;
+        this.card = card;
     }
 }

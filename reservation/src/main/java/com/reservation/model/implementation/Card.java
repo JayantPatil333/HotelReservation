@@ -1,6 +1,6 @@
-package com.reservation.proxy.model.payment.implementation;
+package com.reservation.model.implementation;
 
-import com.reservation.proxy.model.payment.ICard;
+import com.reservation.model.ICard;
 
 public class Card implements ICard {
     private String cardNumber;

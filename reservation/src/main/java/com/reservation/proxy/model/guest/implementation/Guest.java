@@ -1,6 +1,9 @@
 package com.reservation.proxy.model.guest.implementation;
 
 import com.reservation.proxy.model.guest.IGuest;
+import com.reservation.proxy.model.payment.ICard;
+
+import java.util.List;
 
 public class Guest implements IGuest {
 
@@ -9,6 +12,15 @@ public class Guest implements IGuest {
     private String email;
     private String contactNumber;
     private int ratting;
+    private List<ICard> card;
+
+    public List<ICard> getCard() {
+        return card;
+    }
+
+    public void setCard(List<ICard> card) {
+        this.card = card;
+    }
 
     public Long getGuestId() {
         return guestId;
@@ -48,5 +60,15 @@ public class Guest implements IGuest {
 
     public void setRatting(int ratting) {
         this.ratting = ratting;
+    }
+
+    public Guest() {
+    }
+
+    public Guest(Long guestId, String name, String email, String contactNumber) {
+        this.guestId = guestId;
+        this.name = name;
+        this.email = email;
+        this.contactNumber = contactNumber;
     }
 }
