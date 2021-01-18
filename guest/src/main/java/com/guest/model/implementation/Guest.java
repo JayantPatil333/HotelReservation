@@ -13,9 +13,9 @@ public class Guest implements IGuest {
     private String email;
     private String contactNumber;
     private int ratting;
-    private List<Long> reservations =  new ArrayList();
-    //private List<IStay> stayList =  new ArrayList();
-    private List<ICard> cards = new ArrayList();
+    private List<Long> reservations =  new ArrayList<>();
+
+    private List<ICard> cards = new ArrayList<>();
 
     public List<Long> getReservations() {
         return reservations;
@@ -32,14 +32,6 @@ public class Guest implements IGuest {
     public void setCards(List<ICard> cards) {
         this.cards = cards;
     }
-
-    /*public List<IStay> getStayList() {
-        return stayList;
-    }
-
-    public void setStayList(List<IStay> stayList) {
-        this.stayList = stayList;
-    }*/
 
     public Long getGuestId() {
         return guestId;

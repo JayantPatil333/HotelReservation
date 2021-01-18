@@ -38,7 +38,7 @@ public class ReservationService implements IReservationService {
     @Inject
     private IMapper mapper;
 
-    private final Logger LOGGER = LoggerFactory.getLogger(ReservationService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ReservationService.class);
 
     public IGuest getGuestById(Long guestId){
         return  guestProxy.getGuest(guestId);
@@ -72,7 +72,7 @@ public class ReservationService implements IReservationService {
 
     @SuppressWarnings("unused")
     public String doPaymentFallBack(ICard card, double amount, Long reservationId){
-        LOGGER.error("Payment Service is down while handling payment over card details: "+card);
+        LOGGER.error("Payment Service is down while handling payment over card details: {}", card);
 
         return "SUCCESS";
     }

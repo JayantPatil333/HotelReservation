@@ -10,10 +10,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.zuul.jwt.JwtUtil;
 
 @RestController
@@ -29,13 +26,9 @@ public class SecurityController {
     @Autowired
     private JwtUtil jwtUtil;
 
-    @RequestMapping(method = RequestMethod.GET)
-    public String getString(){
-        return "Hello There !!!!";
-    }
-
-    @RequestMapping( value = "/getToken", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity authenticate(@RequestBody AuthenticationRequest request) throws Exception{
+    @PostMapping
+    @RequestMapping( value = "/getToken",consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request){
         try {
             // Authenticate user name and password
             authenticationManager.authenticate(
@@ -43,7 +36,7 @@ public class SecurityController {
             );
         }
         catch (BadCredentialsException e){
-            throw new Exception("Invalid Username or Password.", e);
+            throw new BadCredentialsException("Invalid Username or Password.", e);
         }
 
         // We need User details to generate Token.

@@ -19,12 +19,12 @@ public class HotelDTO {
     @ElementCollection
     @CollectionTable(name = "Room", joinColumns = @JoinColumn(name = "hotel_id"))
     @Column(name = "rooms")
-    private List<RoomDTO> rooms = new ArrayList();
+    private List<RoomDTO> rooms = new ArrayList<>();
 
     @Column(name = "reservations")
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "reservationId")
-    private List<ReservationDTO> reservations = new ArrayList();
+    private List<ReservationDTO> reservations = new ArrayList<>();
 
     public void setReservations(List<ReservationDTO> reservations) {
         this.reservations = reservations;
