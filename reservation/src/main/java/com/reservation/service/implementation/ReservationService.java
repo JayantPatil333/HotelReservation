@@ -1,14 +1,16 @@
 package com.reservation.service.implementation;
 
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
-import com.reservation.dto.ReservationDTO;
+import com.reservation.entity.ReservationEntity;
+import com.reservation.exception.ReservationEntityNotFoundException;
 import com.reservation.mapper.IMapper;
 import com.reservation.model.ICard;
+import com.reservation.model.IGuest;
 import com.reservation.model.IReservation;
+import com.reservation.model.implementation.ReservationStatus;
 import com.reservation.proxy.IGuestInformationProxy;
 import com.reservation.proxy.IHotelInformationProxy;
 import com.reservation.proxy.IPaymentServiceProxy;
-import com.reservation.proxy.model.guest.IGuest;
 import com.reservation.proxy.model.hotel.IHotel;
 
 import com.reservation.repository.implementation.ReservationRepository;
@@ -20,6 +22,8 @@ import org.springframework.http.ResponseEntity;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class ReservationService implements IReservationService {
 
@@ -40,33 +44,49 @@ public class ReservationService implements IReservationService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ReservationService.class);
 
-    public IGuest getGuestById(Long guestId){
-        return  guestProxy.getGuest(guestId);
+    public com.reservation.proxy.model.guest.IGuest getGuestById(Long guestId){
+        ResponseEntity<com.reservation.proxy.model.guest.IGuest> guestResponseEntity = guestProxy.getGuest(guestId);
+        return guestResponseEntity.getBody();
     }
 
     public IHotel getHotelById(Long hotelId){
         return hotelProxy.getHotelById(hotelId);
     }
 
-    public String requestForReservation(IReservation reservation){
-        ReservationDTO newReservation = reservationRepository.save(mapper.mapIReservationToReservationDTO(reservation));
-        return hotelProxy.reservationRequest(mapper.mapReservationDTOToIReservation(newReservation), reservation.getHotelId());
+    public IReservation requestForReservation(IReservation reservation) throws Exception {
+        LOGGER.debug("ReservationService :: requestForReservation :: Request for new reservation {}", reservation);
+        ReservationEntity newReservation = reservationRepository.save(mapper.mapIReservationToReservationDTO(reservation));
+        hotelProxy.reservationRequest(mapper.mapReservationDTOToIReservation(newReservation), newReservation.getHotelId());
+        return mapper.mapReservationDTOToIReservation(newReservation);
     }
 
     @Transactional(Transactional.TxType.REQUIRES_NEW)
-    public IReservation confirmReservation(IReservation reservation){
-        hotelProxy.confirmReservation(reservation.getReservationId());
-        guestProxy.addStayByGuest(reservation.getGuestId(), reservation.getReservationId());
-        ReservationDTO reservationDTO = reservationRepository.getReservationById(reservation.getReservationId());
-        reservationDTO.setState("CONFIRMED");
-        return mapper.mapReservationDTOToIReservation(reservationDTO);
+    public IReservation updateReservation(IReservation reservation) throws ReservationEntityNotFoundException {
+        LOGGER.debug("ReservationService :: updateReservation :: Request to update reservation {} ", reservation);
+        ReservationEntity reservationEntity = reservationRepository.getReservationById(reservation.getReservationId());
+        if (reservationEntity != null) {
+            reservationEntity.setState(reservation.getState().toString());
+            hotelProxy.updateReservation(reservation.getHotelId(), reservation);
+            if (reservation.getState().equals(ReservationStatus.CONFIRM)) {
+                guestProxy.addStayByGuest(reservation.getGuestId(), reservation.getReservationId());
+                reservationEntity.setCard(mapper.mapICardToCardDTO(reservation.getCard()));
+                guestProxy.addNewCard(reservationEntity.getGuestId(), reservation.getCard());
+                doPayment(reservation.getCard(), reservation.getAmount(), reservation.getReservationId());
+            }
+            else if(reservation.getState().equals(ReservationStatus.CANCELLED)){
+                paymentServiceProxy.revertPayment(mapper.mapICardToProxy(mapper.cardDTOToICard(reservationEntity.getCard())), reservationEntity.getAmount());
+            }
+
+            return mapper.mapReservationDTOToIReservation(reservationEntity);
+        }
+        else
+        {
+            throw new ReservationEntityNotFoundException("Reservation Entity with ID "+reservation.getReservationId()+" not found.");
+        }
     }
 
     @HystrixCommand(fallbackMethod = "doPaymentFallBack")
-    @Transactional(Transactional.TxType.REQUIRES_NEW)
     public String doPayment(ICard card, double amount, Long reservationId){
-        ReservationDTO reservation = reservationRepository.getReservationById(reservationId);
-        reservation.setCard(mapper.mapICardToCardDTO(card));
         return paymentServiceProxy.doPayment(mapper.mapICardToProxy(card), amount);
     }
 
@@ -77,12 +97,12 @@ public class ReservationService implements IReservationService {
         return "SUCCESS";
     }
 
-    public IReservation getReservation(Long id, boolean isDetailsRequired){
-         ReservationDTO reservationDTO = reservationRepository.getReservationById(id);
-         IReservation reservation = mapper.mapReservationDTOToIReservation(reservationDTO);
+    public IReservation getReservation(Long id, boolean isDetailsRequired) throws Exception {
+         ReservationEntity reservationEntity = reservationRepository.getReservationById(id);
+         IReservation reservation = mapper.mapReservationDTOToIReservation(reservationEntity);
          if (isDetailsRequired){
-             IHotel hotel = getHotelById(reservationDTO.getHotelId());
-             IGuest guest = getGuestById(reservationDTO.getGuestId());
+             IHotel hotel = getHotelById(reservationEntity.getHotelId());
+             com.reservation.proxy.model.guest.IGuest guest = getGuestById(reservationEntity.getGuestId());
              reservation.setHotel(hotel);
              reservation.setGuest(guest);
          }
@@ -90,17 +110,14 @@ public class ReservationService implements IReservationService {
     }
 
     @Override
-    @Transactional(Transactional.TxType.REQUIRES_NEW)
-    public IReservation cancelReservation(Long id, double amount) throws Exception {
-        ReservationDTO reservationDTO = reservationRepository.getReservationById(id);
-        ResponseEntity<IReservation> cancelReservation = hotelProxy.cancelReservation(reservationDTO.getHotelId(), reservationDTO.getReservationId());
-        if(cancelReservation.getStatusCode().is2xxSuccessful()){
-            paymentServiceProxy.revertPayment( mapper.mapICardToProxy(mapper.cardDTOToICard(reservationDTO.getCard())), amount);
-            reservationDTO.setState("CANCELLED");
-        }
-        else {
-            throw new Exception("Request get rejected by Hotel.");
-        }
-        return mapper.mapReservationDTOToIReservation(reservationDTO);
+    public com.reservation.model.IGuest getReservationsByGuestId(Long guestId) {
+        com.reservation.proxy.model.guest.IGuest guest = getGuestById(guestId);
+        List<IReservation> reservationList = guest.getReservations().stream().map(reservationRepository :: getReservationById)
+                .map(mapper::mapReservationDTOToIReservation)
+                .collect(Collectors.toList());
+        IGuest resultingGuest = mapper.mapProxyGuestToIGuest(guest);
+        resultingGuest.setReservations(reservationList);
+        return resultingGuest;
     }
+
 }

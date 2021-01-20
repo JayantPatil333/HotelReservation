@@ -1,10 +1,10 @@
-package com.reservation.dto;
+package com.reservation.entity;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "Card")
-public class CardDTO {
+public class CardEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long cardId;
@@ -53,11 +53,11 @@ public class CardDTO {
                 '}';
     }
 
-    public CardDTO() {
+    public CardEntity() {
 
     }
 
-    public CardDTO(String cardNumber, String expMonth, String expYear) {
+    public CardEntity(String cardNumber, String expMonth, String expYear) {
         this.cardNumber = cardNumber;
         this.expMonth = expMonth;
         this.expYear = expYear;

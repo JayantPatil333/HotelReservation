@@ -1,6 +1,4 @@
-package com.guest.dto;
-
-import com.guest.model.IGuest;
+package com.guest.entity;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -8,10 +6,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "guest")
-    /*@NamedQueries({
-            @NamedQuery(name = "findGuestById", query = "from Guest g where g.guestId = :id")
-    })*/
-public class GuestDTO {
+public class GuestEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -23,7 +18,7 @@ public class GuestDTO {
 
     @ElementCollection
     @CollectionTable(name = "Card", joinColumns = @JoinColumn(name = "guest_id"))
-    private List<CardDTO> cards = new ArrayList();
+    private List<CardEntity> cards = new ArrayList();
 
     @ElementCollection
     private List<Long> reservations =  new ArrayList();
@@ -40,11 +35,11 @@ public class GuestDTO {
     @CollectionTable(name = "Stay", joinColumns = @JoinColumn(name = "guest_id"))
     private List<StayDTO> stayList = new ArrayList();*/
 
-    public List<CardDTO> getCards() {
+    public List<CardEntity> getCards() {
         return cards;
     }
 
-    public void setCards(List<CardDTO> cards) {
+    public void setCards(List<CardEntity> cards) {
         this.cards = cards;
     }
 
@@ -96,9 +91,9 @@ public class GuestDTO {
         this.ratting = ratting;
     }
 
-    public GuestDTO(){}
+    public GuestEntity(){}
 
-    public GuestDTO(Long guestId, String name, String email, String contactNumber) {
+    public GuestEntity(Long guestId, String name, String email, String contactNumber) {
         this.guestId = guestId;
         this.name = name;
         this.email = email;

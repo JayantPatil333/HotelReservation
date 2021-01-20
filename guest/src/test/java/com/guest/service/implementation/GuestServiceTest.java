@@ -1,7 +1,7 @@
 package com.guest.service.implementation;
 
-import com.guest.dto.CardDTO;
-import com.guest.dto.GuestDTO;
+import com.guest.entity.CardEntity;
+import com.guest.entity.GuestEntity;
 import com.guest.model.ICard;
 import com.guest.model.IGuest;
 import com.guest.model.implementation.Card;
@@ -38,30 +38,30 @@ public class GuestServiceTest {
     private GuestRepository repository;
 
     IGuest guest = new Guest(1L, "Jayant","jayant@gmail.com","1234567");
-    GuestDTO guestDTO =  new GuestDTO(1L, "Jayant","jayant@gmail.com", "1234567");
-    GuestDTO guestDTO1 =  new GuestDTO(2L, "Jayant","jayant@gmail.com", "1234567");
+    GuestEntity guestEntity =  new GuestEntity(1L, "Jayant","jayant@gmail.com", "1234567");
+    GuestEntity guestEntity1 =  new GuestEntity(2L, "Jayant","jayant@gmail.com", "1234567");
     @Test
     @Order(1)
     public void addNewGuest() {
 
-        given(repository.save(any())).willReturn(guestDTO);
+        given(repository.save(any())).willReturn(guestEntity);
         IGuest resultGuest = guestService.addNewGuest(guest);
 
-        assertEquals(guestDTO.getGuestId(), resultGuest.getGuestId());
-        assertEquals(guestDTO.getName(), resultGuest.getName());
-        assertEquals(guestDTO.getEmail(), resultGuest.getEmail());
-        assertEquals(guestDTO.getContactNumber(), resultGuest.getContactNumber());
+        assertEquals(guestEntity.getGuestId(), resultGuest.getGuestId());
+        assertEquals(guestEntity.getName(), resultGuest.getName());
+        assertEquals(guestEntity.getEmail(), resultGuest.getEmail());
+        assertEquals(guestEntity.getContactNumber(), resultGuest.getContactNumber());
     }
 
     @Test
     @Order(2)
     public void getGuest() {
-        given(repository.findById(anyLong())).willReturn(guestDTO);
+        given(repository.findById(anyLong())).willReturn(guestEntity);
         IGuest resultGuest = guestService.getGuest(1L);
-        assertEquals(guestDTO.getGuestId(), resultGuest.getGuestId());
-        assertEquals(guestDTO.getName(), resultGuest.getName());
-        assertEquals(guestDTO.getEmail(), resultGuest.getEmail());
-        assertEquals(guestDTO.getContactNumber(), resultGuest.getContactNumber());
+        assertEquals(guestEntity.getGuestId(), resultGuest.getGuestId());
+        assertEquals(guestEntity.getName(), resultGuest.getName());
+        assertEquals(guestEntity.getEmail(), resultGuest.getEmail());
+        assertEquals(guestEntity.getContactNumber(), resultGuest.getContactNumber());
     }
 
     @Test(expected = EntityNotFoundException.class)
@@ -74,7 +74,7 @@ public class GuestServiceTest {
     @Test
     @Order(4)
     public void addStayByGuest() {
-        given(repository.findById(anyLong())).willReturn(guestDTO);
+        given(repository.findById(anyLong())).willReturn(guestEntity);
         IGuest resultGuest = guestService.addStayByGuest(1L, 1L);
         assertTrue(resultGuest.getReservations().stream().filter(aLong -> aLong.equals(1L)).findFirst().isPresent());
     }
@@ -82,8 +82,8 @@ public class GuestServiceTest {
     @Test
     @Order(5)
     public void getGuests() {
-        given(repository.findById(1L)).willReturn(guestDTO);
-        given(repository.findById(2L)).willReturn(guestDTO1);
+        given(repository.findById(1L)).willReturn(guestEntity);
+        given(repository.findById(2L)).willReturn(guestEntity1);
         List<IGuest> guestList = guestService.getGuests(Arrays.asList(1L, 2L));
         assertTrue(guestList.stream().filter(iGuest -> iGuest.getGuestId().equals(1L)).findFirst().isPresent());
         assertTrue(guestList.stream().filter(iGuest -> iGuest.getGuestId().equals(2L)).findFirst().isPresent());
@@ -92,10 +92,10 @@ public class GuestServiceTest {
     @Test
     @Order(6)
     public void addNewCard(){
-        CardDTO card =  new CardDTO("1234567890765", "12","2014");
-        guestDTO.getCards().add(card);
+        CardEntity card =  new CardEntity("1234567890765", "12","2014");
+        guestEntity.getCards().add(card);
         ICard iCard =  new Card("1234567890765", "12","2014");
-        given(repository.findById(1L)).willReturn(guestDTO);
+        given(repository.findById(1L)).willReturn(guestEntity);
         IGuest iGuest = guestService.addNewCard(1L, iCard);
         assertTrue(iGuest.getCards().stream().filter(c -> c.getCardNumber().equals(iCard.getCardNumber())).findFirst().isPresent());
     }

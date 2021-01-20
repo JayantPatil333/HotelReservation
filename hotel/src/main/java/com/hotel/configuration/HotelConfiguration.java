@@ -1,5 +1,7 @@
 package com.hotel.configuration;
 
+import com.hotel.controller.IHotelController;
+import com.hotel.controller.implementation.HotelController;
 import com.hotel.mapper.IMapper;
 import com.hotel.mapper.implementation.Mapper;
 import com.hotel.services.IHotelService;
@@ -19,4 +21,5 @@ public class HotelConfiguration {
     public IMapper getMapperForIHotelAndHotelDTO(){
         return new Mapper();
     }
+
 }

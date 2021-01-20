@@ -2,14 +2,15 @@ package com.hotel.model;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.hotel.model.implementation.Reservation;
+import com.hotel.model.implementation.ReservationStatus;
 
 import java.util.Date;
 
 @JsonDeserialize(as = Reservation.class)
 public interface IReservation {
     java.lang.Long getReservationId();
-    void setState(String state);
-    String getState();
+    void setState(ReservationStatus state);
+    ReservationStatus getState();
     public IRoom getRoom() ;
     public void setRoom(IRoom room);
     public Long getGuestId();

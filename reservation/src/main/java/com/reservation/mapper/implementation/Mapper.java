@@ -1,47 +1,52 @@
 package com.reservation.mapper.implementation;
 
-import com.reservation.dto.CardDTO;
-import com.reservation.dto.ReservationDTO;
+import com.reservation.entity.CardEntity;
+import com.reservation.entity.ReservationEntity;
 import com.reservation.mapper.IMapper;
 import com.reservation.model.ICard;
+import com.reservation.model.IGuest;
 import com.reservation.model.IReservation;
+import com.reservation.model.implementation.Guest;
 import com.reservation.model.implementation.Reservation;
+import com.reservation.model.implementation.ReservationStatus;
 import com.reservation.proxy.model.payment.implementation.Card;
 
 public class Mapper implements  IMapper {
-    public ReservationDTO mapIReservationToReservationDTO(IReservation reservation){
-        ReservationDTO reservationDTO =  new ReservationDTO();
-        reservationDTO.setReservationId(reservation.getReservationId());
-        reservationDTO.setFromDate(reservation.getFromDate());
-        reservationDTO.setGuestId(reservation.getGuestId());
-        reservationDTO.setState(reservation.getState());
-        reservationDTO.setHotelId(reservation.getHotelId());
-        reservationDTO.setToDate(reservation.getToDate());
-        reservationDTO.setCard(mapICardToCardDTO(reservation.getCard()));
-        return reservationDTO;
+    public ReservationEntity mapIReservationToReservationDTO(IReservation reservation){
+        ReservationEntity reservationEntity =  new ReservationEntity();
+        reservationEntity.setReservationId(reservation.getReservationId());
+        reservationEntity.setFromDate(reservation.getFromDate());
+        reservationEntity.setGuestId(reservation.getGuestId());
+        reservationEntity.setState(reservation.getState().toString());
+        reservationEntity.setHotelId(reservation.getHotelId());
+        reservationEntity.setToDate(reservation.getToDate());
+        reservationEntity.setCard(reservation.getCard()!= null ? mapICardToCardDTO(reservation.getCard()): null);
+        reservationEntity.setAmount(reservation.getAmount());
+        return reservationEntity;
     }
 
-    public IReservation mapReservationDTOToIReservation(ReservationDTO reservationDTO){
+    public IReservation mapReservationDTOToIReservation(ReservationEntity reservationEntity){
         IReservation reservation =  new Reservation();
-        reservation.setReservationId(reservationDTO.getReservationId());
-        reservation.setFromDate(reservationDTO.getFromDate());
-        reservation.setGuestId(reservationDTO.getGuestId());
-        reservation.setHotelId(reservationDTO.getHotelId());
-        reservation.setState(reservationDTO.getState());
-        reservation.setToDate(reservationDTO.getToDate());
-        reservation.setCard(mapCardDTOToICard(reservationDTO.getCard()));
+        reservation.setReservationId(reservationEntity.getReservationId());
+        reservation.setFromDate(reservationEntity.getFromDate());
+        reservation.setGuestId(reservationEntity.getGuestId());
+        reservation.setHotelId(reservationEntity.getHotelId());
+        reservation.setState(ReservationStatus.valueOf(reservationEntity.getState()));
+        reservation.setToDate(reservationEntity.getToDate());
+        reservation.setCard(reservationEntity.getCard() != null ? mapCardDTOToICard(reservationEntity.getCard()): null);
+        reservation.setAmount(reservationEntity.getAmount());
         return reservation;
     }
 
-    private ICard mapCardDTOToICard(CardDTO card) {
+    private ICard mapCardDTOToICard(CardEntity card) {
         ICard iCard =  new com.reservation.model.implementation.Card(card.getCardNumber(), card.getExpMonth(), card.getExpYear());
         return iCard;
     }
 
     @Override
-    public CardDTO mapICardToCardDTO(ICard card) {
-        CardDTO cardDTO =  new CardDTO(card.getCardNumber(), card.getExpMonth(), card.getExpYear());
-        return cardDTO;
+    public CardEntity mapICardToCardDTO(ICard card) {
+        CardEntity cardEntity =  new CardEntity(card.getCardNumber(), card.getExpMonth(), card.getExpYear());
+        return cardEntity;
     }
 
     @Override
@@ -51,8 +56,18 @@ public class Mapper implements  IMapper {
     }
 
     @Override
-    public ICard cardDTOToICard(CardDTO card) {
+    public ICard cardDTOToICard(CardEntity card) {
         ICard iCard =  new com.reservation.model.implementation.Card(card.getCardNumber(), card.getExpMonth(), card.getExpYear());
         return iCard;
+    }
+
+    @Override
+    public IGuest mapProxyGuestToIGuest(com.reservation.proxy.model.guest.IGuest proxyGuest) {
+        IGuest iGuest =  new Guest();
+        iGuest.setGuestId(proxyGuest.getGuestId());
+        iGuest.setContactNumber(proxyGuest.getContactNumber());
+        iGuest.setEmail(proxyGuest.getEmail());
+        iGuest.setName(proxyGuest.getName());
+        return iGuest;
     }
 }

@@ -81,4 +81,18 @@ public class Hotel implements IHotel {
         this.starRatting = starRatting;
         this.address = address;
     }
+
+    @Override
+    public String toString() {
+        return "Hotel{" +
+                "hotelId=" + hotelId +
+                ", name='" + name + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", starRatting=" + starRatting +
+                ", address=" + address +
+                ", rooms=" + rooms +
+                ", reservations=" + reservations +
+                ", reservationsByDate=" + reservationsByDate +
+                '}';
+    }
 }

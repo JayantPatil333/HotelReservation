@@ -1,4 +1,4 @@
-package com.hotel.dto;
+package com.hotel.entity;
 
 import com.hotel.model.implementation.RoomType;
 
@@ -8,7 +8,7 @@ import java.util.Objects;
 
 @Embeddable
 @Table(name = "Room")
-public class RoomDTO {
+public class RoomEntity {
     private int roomNo;
     private double rentPerNight;
 
@@ -16,10 +16,10 @@ public class RoomDTO {
 
     private boolean isOccupiedCurrently = false;
 
-    public RoomDTO() {
+    public RoomEntity() {
     }
 
-    public RoomDTO(int roomNo, double rentPerNight, RoomType roomType) {
+    public RoomEntity(int roomNo, double rentPerNight, RoomType roomType) {
         this.roomNo = roomNo;
         this.rentPerNight = rentPerNight;
         this.roomType = roomType;
@@ -80,7 +80,7 @@ public class RoomDTO {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        RoomDTO room = (RoomDTO) o;
+        RoomEntity room = (RoomEntity) o;
         return roomNo == room.roomNo && roomType == room.roomType;
     }
 

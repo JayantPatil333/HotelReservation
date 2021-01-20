@@ -9,4 +9,7 @@ zuul:
     ReservationService:
       path: /ReservationService/**
       url: http://localhost:8083
+    PaymentService:
+      path: /PaymentService/**
+      url: http://localhost:8084
   sensitive-headers: Cookie,Set-Cookie

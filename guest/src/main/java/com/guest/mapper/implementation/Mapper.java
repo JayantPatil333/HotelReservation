@@ -1,6 +1,6 @@
 package com.guest.mapper.implementation;
 
-import com.guest.dto.*;
+import com.guest.entity.*;
 import com.guest.mapper.IMapper;
 import com.guest.model.*;
 import com.guest.model.implementation.*;
@@ -9,44 +9,44 @@ import java.util.stream.Collectors;
 
 public class Mapper implements IMapper {
     @Override
-    public IGuest mapGuestDTOToIGuest(GuestDTO guestDTO) {
+    public IGuest mapGuestDTOToIGuest(GuestEntity guestEntity) {
         IGuest iGuest =  new Guest();
-        iGuest.setGuestId(guestDTO.getGuestId());
-        iGuest.setContactNumber(guestDTO.getContactNumber());
-        iGuest.setEmail(guestDTO.getEmail());
-        iGuest.setName(guestDTO.getName());
-        iGuest.setRatting(guestDTO.getRatting());
-        iGuest.setCards(guestDTO.getCards().stream().map(this::mapCardDTOToICard).collect(Collectors.toList()));
-        iGuest.setReservations(guestDTO.getReservations());
+        iGuest.setGuestId(guestEntity.getGuestId());
+        iGuest.setContactNumber(guestEntity.getContactNumber());
+        iGuest.setEmail(guestEntity.getEmail());
+        iGuest.setName(guestEntity.getName());
+        iGuest.setRatting(guestEntity.getRatting());
+        iGuest.setCards(guestEntity.getCards().stream().map(this::mapCardDTOToICard).collect(Collectors.toList()));
+        iGuest.setReservations(guestEntity.getReservations());
         return iGuest;
     }
 
     @Override
-    public GuestDTO mapIGuestToGuestDTO(IGuest iGuest) {
-        GuestDTO guestDTO =  new GuestDTO();
-        guestDTO.setGuestId(iGuest.getGuestId());
-        guestDTO.setName(iGuest.getName());
-        guestDTO.setEmail(iGuest.getEmail());
-        guestDTO.setRatting(iGuest.getRatting());
-        guestDTO.setContactNumber(iGuest.getContactNumber());
-        guestDTO.setCards(iGuest.getCards().stream().map(this::mapICardToCardDTO).collect(Collectors.toList()));
-        guestDTO.setReservations(iGuest.getReservations());
-        return guestDTO;
+    public GuestEntity mapIGuestToGuestDTO(IGuest iGuest) {
+        GuestEntity guestEntity =  new GuestEntity();
+        guestEntity.setGuestId(iGuest.getGuestId());
+        guestEntity.setName(iGuest.getName());
+        guestEntity.setEmail(iGuest.getEmail());
+        guestEntity.setRatting(iGuest.getRatting());
+        guestEntity.setContactNumber(iGuest.getContactNumber());
+        guestEntity.setCards(iGuest.getCards().stream().map(this::mapICardToCardDTO).collect(Collectors.toList()));
+        guestEntity.setReservations(iGuest.getReservations());
+        return guestEntity;
     }
 
-    public ICard mapCardDTOToICard(CardDTO cardDTO){
+    public ICard mapCardDTOToICard(CardEntity cardEntity){
         ICard iCard = new Card();
-        iCard.setCardNumber(cardDTO.getCardNumber());
-        iCard.setExpMonth(cardDTO.getExpMonth());
-        iCard.setExpYear(cardDTO.getExpYear());
+        iCard.setCardNumber(cardEntity.getCardNumber());
+        iCard.setExpMonth(cardEntity.getExpMonth());
+        iCard.setExpYear(cardEntity.getExpYear());
         return iCard;
     }
 
-    public CardDTO mapICardToCardDTO(ICard iCard){
-        CardDTO cardDTO =  new CardDTO();
-        cardDTO.setCardNumber(iCard.getCardNumber());
-        cardDTO.setExpMonth(iCard.getExpMonth());
-        cardDTO.setExpYear(iCard.getExpYear());
-        return cardDTO;
+    public CardEntity mapICardToCardDTO(ICard iCard){
+        CardEntity cardEntity =  new CardEntity();
+        cardEntity.setCardNumber(iCard.getCardNumber());
+        cardEntity.setExpMonth(iCard.getExpMonth());
+        cardEntity.setExpYear(iCard.getExpYear());
+        return cardEntity;
     }
 }

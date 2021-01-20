@@ -1,19 +1,22 @@
 package com.reservation.mapper;
 
-import com.reservation.dto.CardDTO;
-import com.reservation.dto.ReservationDTO;
+import com.reservation.entity.CardEntity;
+import com.reservation.entity.ReservationEntity;
 import com.reservation.model.ICard;
+import com.reservation.model.IGuest;
 import com.reservation.model.IReservation;
 
 public interface IMapper {
 
-    public ReservationDTO mapIReservationToReservationDTO(IReservation reservation);
+    public ReservationEntity mapIReservationToReservationDTO(IReservation reservation);
 
-    public IReservation mapReservationDTOToIReservation(ReservationDTO reservationDTO);
+    public IReservation mapReservationDTOToIReservation(ReservationEntity reservationEntity);
 
-    public CardDTO mapICardToCardDTO(ICard card);
+    public CardEntity mapICardToCardDTO(ICard card);
 
     com.reservation.proxy.model.payment.ICard mapICardToProxy(ICard card);
 
-    public ICard cardDTOToICard(CardDTO card);
+    public ICard cardDTOToICard(CardEntity card);
+
+    IGuest mapProxyGuestToIGuest(com.reservation.proxy.model.guest.IGuest body);
 }

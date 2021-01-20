@@ -1,4 +1,4 @@
-package com.hotel.dto;
+package com.hotel.entity;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -6,10 +6,10 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "Reservation")
-public class ReservationDTO {
+public class ReservationEntity {
 
     @JoinColumn(name = "roomNo")
-    private RoomDTO room;
+    private RoomEntity room;
 
     private Long guestId;
     private Date fromDate;
@@ -28,10 +28,10 @@ public class ReservationDTO {
         this.state = state;
     }
 
-    public ReservationDTO() {
+    public ReservationEntity() {
     }
 
-    public ReservationDTO(RoomDTO room, Long guestId, Date fromDate, Date toDate, Long reservationId, String state, String single) {
+    public ReservationEntity(RoomEntity room, Long guestId, Date fromDate, Date toDate, Long reservationId, String state, String single) {
         this.room = room;
         this.guestId = guestId;
         this.fromDate = fromDate;
@@ -40,11 +40,11 @@ public class ReservationDTO {
         this.state = state;
     }
 
-    public RoomDTO getRoom() {
+    public RoomEntity getRoom() {
         return room;
     }
 
-    public void setRoom(RoomDTO room) {
+    public void setRoom(RoomEntity room) {
         this.room = room;
     }
 
@@ -84,7 +84,7 @@ public class ReservationDTO {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ReservationDTO that = (ReservationDTO) o;
+        ReservationEntity that = (ReservationEntity) o;
         return Objects.equals(reservationId, that.reservationId);
     }
 

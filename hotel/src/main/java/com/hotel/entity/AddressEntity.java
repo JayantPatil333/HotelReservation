@@ -1,10 +1,10 @@
-package com.hotel.dto;
+package com.hotel.entity;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "Address")
-public class AddressDTO {
+public class AddressEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long addressId;
@@ -22,7 +22,7 @@ public class AddressDTO {
         this.pin = pin;
     }
 
-    public AddressDTO() {
+    public AddressEntity() {
     }
 
     public String getStreet() {
@@ -57,7 +57,7 @@ public class AddressDTO {
         this.city = city;
     }
 
-    public AddressDTO(long l, String street, String area, String city, String s) {
+    public AddressEntity(long l, String street, String area, String city, String s) {
         this.street = street;
         this.area = area;
         this.city = city;

@@ -1,18 +1,18 @@
 package com.hotel.mapper;
 
-import com.hotel.dto.HotelDTO;
-import com.hotel.dto.ReservationDTO;
+import com.hotel.entity.HotelEntity;
+import com.hotel.entity.ReservationEntity;
 import com.hotel.model.IHotel;
 import com.hotel.model.IReservation;
 
 public interface IMapper {
-    HotelDTO mapIHotelToHotelDTO(IHotel hotel);
+    HotelEntity mapIHotelToHotelDTO(IHotel hotel);
 
-    IHotel mapHotelDTOToIHotel(HotelDTO hotelDTO);
+    IHotel mapHotelDTOToIHotel(HotelEntity hotelEntity);
 
-    IReservation mapReservationDTOToIReservation(ReservationDTO reservationDTO);
+    IReservation mapReservationDTOToIReservation(ReservationEntity reservationEntity);
 
-    ReservationDTO mapIReservationToReservationDTO(IReservation iReservation);
+    ReservationEntity mapIReservationToReservationDTO(IReservation iReservation);
 
     //IGuest mapGuestToIGuest(com.hotel.proxy.model.IGuest guest);
 }

@@ -1,4 +1,4 @@
-package com.reservation.dto;
+package com.reservation.entity;
 
 
 import javax.persistence.*;
@@ -6,7 +6,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "Reservation")
-public class ReservationDTO {
+public class ReservationEntity {
     private Date fromDate;
     private Date toDate;
     private Long guestId;
@@ -19,13 +19,23 @@ public class ReservationDTO {
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "cardId")
-    private CardDTO card;
+    private CardEntity card;
 
-    public CardDTO getCard() {
+    private double amount;
+
+    public double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
+
+    public CardEntity getCard() {
         return card;
     }
 
-    public void setCard(CardDTO card) {
+    public void setCard(CardEntity card) {
         this.card = card;
     }
 
@@ -77,10 +87,10 @@ public class ReservationDTO {
         this.state = state;
     }
 
-    public ReservationDTO() {
+    public ReservationEntity() {
     }
 
-    public ReservationDTO(Date fromDate, Date toDate, Long guestId, Long hotelId, Long reservationId, String state, CardDTO card) {
+    public ReservationEntity(Date fromDate, Date toDate, Long guestId, Long hotelId, Long reservationId, String state, CardEntity card) {
         this.fromDate = fromDate;
         this.toDate = toDate;
         this.guestId = guestId;

@@ -43,7 +43,7 @@ public class HotelControllerTest {
 
     private IAddress address = new Address(1L, "Lane no1", "Hanuman Nagar", "Pune","412308");
     private IHotel hotel = new Hotel(1L, "City Inn", "1234567890",3, address);
-    private IReservation reservation = new Reservation(new Room(),1L, new Date(), new Date(), 1L, "REQUEST", "SINGLE");
+    private IReservation reservation = new Reservation(new Room(),1L, new Date(), new Date(), 1L, ReservationStatus.REQUEST, "SINGLE");
 
     @Before
     public void setUp() {
@@ -58,7 +58,7 @@ public class HotelControllerTest {
         given(service.addNewHotel(any())).willReturn(hotel);
         ObjectMapper mapper =  new ObjectMapper();
         String json =  mapper.writeValueAsString(hotel);
-        mockMvc.perform(post("/hotel")
+        mockMvc.perform(post("/hotels")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(json)
                         .with(user("Hotel")
@@ -72,9 +72,8 @@ public class HotelControllerTest {
         given(service.reservationRequest(anyLong(), any())).willReturn(reservation);
         ObjectMapper mapper = new ObjectMapper();
         String json = mapper.writeValueAsString(reservation);
-        mockMvc.perform(post("/hotel/reservation")
+        mockMvc.perform(post("/hotels/{hotelId}/reservation", "1")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .param("hotelId", "1")
                 .content(json)
                 .with(user("Guest")
                         .password("password")
@@ -87,7 +86,7 @@ public class HotelControllerTest {
         given(service.reservationRequest(anyLong(), any())).willReturn(reservation);
         ObjectMapper mapper = new ObjectMapper();
         String json = mapper.writeValueAsString(reservation);
-        mockMvc.perform(post("/hotel/reservation")
+        mockMvc.perform(post("/hotels/1/reservation")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .param("hotelId", "1")
                 .content(json)
@@ -98,23 +97,9 @@ public class HotelControllerTest {
     }
 
     @Test
-    public void cancelReservation() throws Exception {
-        given(service.cancelReservation(anyLong(),anyLong())).willReturn(reservation);
-        mockMvc.perform(patch("/hotel/cancelReservation")
-                        .param("hotelId", "1")
-                        .param("reservationId","1")
-                        .with(user("Guest")
-                            .password("password")
-                            .roles("GUEST")))
-                        .andExpect(status().isAccepted());
-
-    }
-
-    @Test
     public void getAllReservationsByHotelId() throws Exception {
         given(service.getAllReservationsByHotelId(anyLong())).willReturn(Arrays.asList(reservation));
-        mockMvc.perform(get("/hotel/reservationsByHotel")
-                .param("hotelId", "1")
+        mockMvc.perform(get("/hotels/1/reservations")
                 .with(user("Hotel")
                         .password("password")
                         .roles("HOTEL")))
@@ -124,9 +109,7 @@ public class HotelControllerTest {
     @Test
     public void getReservationByGuest() throws Exception {
         given(service.getReservationByGuestIdPerHotel(anyLong(),anyLong())).willReturn(Arrays.asList(reservation));
-        mockMvc.perform(get("/hotel/reservationsByHotel")
-                .param("hotelId", "1")
-                .param("guestId","1")
+        mockMvc.perform(get("/hotels/{hotelId}/{guestId}/reservations","1","1")
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .with(user("Hotel")
                         .password("password")
@@ -135,11 +118,14 @@ public class HotelControllerTest {
     }
 
     @Test
-    public void confirmReservation() throws Exception {
-        given(service.confirmReservation(anyLong())).willReturn(reservation);
-        mockMvc.perform(patch("/hotel/confirmReservation")
-                .param("reservationId", "1")
-                .accept(MediaType.APPLICATION_JSON_VALUE)
+    public void updateReservation_Confirm() throws Exception {
+        reservation.setState(ReservationStatus.CONFIRM);
+        given(service.updateReservation(anyLong(), any())).willReturn(reservation);
+        ObjectMapper mapper =  new ObjectMapper();
+        String input =  mapper.writeValueAsString(reservation);
+        mockMvc.perform(put("/hotels/{hotelId}/reservation", "1")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(input)
                 .with(user("Guest")
                         .password("password")
                         .roles("GUEST")))
@@ -148,15 +134,9 @@ public class HotelControllerTest {
     }
 
     @Test
-    public void getHotels() {
-
-    }
-
-    @Test
     public void getHotelById() throws Exception {
         given(service.getHotelById(anyLong())).willReturn(hotel);
-        mockMvc.perform(get("/hotel")
-                .param("hotelId", "1")
+        mockMvc.perform(get("/hotels/1")
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .with(user("Guest")
                         .password("password")
@@ -167,12 +147,8 @@ public class HotelControllerTest {
 
     @Test
     public void searchHotels() throws Exception {
-        given(service.searchHotels(anyString(), any(), any(), anyString())).willReturn(Arrays.asList(hotel));
-        mockMvc.perform(get("/hotel/searchHotels")
-                .param("cityName", "Pune")
-                .param("fromDate","2021-01-12")
-                .param("toDate","2021-01-15")
-                .param("roomType","SINGLE")
+        given(service.searchHotelsByCity(anyString())).willReturn(Arrays.asList(hotel));
+        mockMvc.perform(get("/Pune/hotels")
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .with(user("Guest")
                         .password("password")

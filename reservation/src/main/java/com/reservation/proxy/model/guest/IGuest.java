@@ -32,4 +32,8 @@ public interface IGuest {
     public List<ICard> getCard();
 
     public void setCard(List<ICard> card);
+
+    public void setReservations(List<Long> reservations);
+
+    public List<Long> getReservations();
 }

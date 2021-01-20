@@ -1,14 +1,14 @@
 package com.guest.mapper;
 
-import com.guest.dto.CardDTO;
-import com.guest.dto.GuestDTO;
+import com.guest.entity.CardEntity;
+import com.guest.entity.GuestEntity;
 import com.guest.model.ICard;
 import com.guest.model.IGuest;
 
 public interface IMapper {
-    public IGuest mapGuestDTOToIGuest(GuestDTO guestDTO);
+    public IGuest mapGuestDTOToIGuest(GuestEntity guestEntity);
 
-    public GuestDTO mapIGuestToGuestDTO(IGuest iGuest);
+    public GuestEntity mapIGuestToGuestDTO(IGuest iGuest);
 
-    public CardDTO mapICardToCardDTO(ICard iCard);
+    public CardEntity mapICardToCardDTO(ICard iCard);
 }

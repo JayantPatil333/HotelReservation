@@ -1,9 +1,9 @@
 package com.reservation.repository;
 
-import com.reservation.dto.ReservationDTO;
+import com.reservation.entity.ReservationEntity;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface IReservationRepository extends CrudRepository<ReservationDTO, Long> {
+public interface IReservationRepository extends CrudRepository<ReservationEntity, Long> {
 }

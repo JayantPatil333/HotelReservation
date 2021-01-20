@@ -1,11 +1,11 @@
-package com.hotel.dto;
+package com.hotel.entity;
 
 import javax.persistence.*;
 import java.util.*;
 
 @Entity
 @Table(name = "Hotel")
-public class HotelDTO {
+public class HotelEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long hotelId;
@@ -14,23 +14,23 @@ public class HotelDTO {
     private int starRatting;
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "addressId")
-    private AddressDTO address;
+    private AddressEntity address;
 
     @ElementCollection
     @CollectionTable(name = "Room", joinColumns = @JoinColumn(name = "hotel_id"))
     @Column(name = "rooms")
-    private List<RoomDTO> rooms = new ArrayList<>();
+    private List<RoomEntity> rooms = new ArrayList<>();
 
     @Column(name = "reservations")
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "reservationId")
-    private List<ReservationDTO> reservations = new ArrayList<>();
+    private List<ReservationEntity> reservations = new ArrayList<>();
 
-    public void setReservations(List<ReservationDTO> reservations) {
+    public void setReservations(List<ReservationEntity> reservations) {
         this.reservations = reservations;
     }
 
-    public List<ReservationDTO> getReservations() {
+    public List<ReservationEntity> getReservations() {
         return reservations;
     }
 
@@ -66,27 +66,27 @@ public class HotelDTO {
         this.starRatting = starRatting;
     }
 
-    public AddressDTO getAddress() {
+    public AddressEntity getAddress() {
         return address;
     }
 
-    public void setAddress(AddressDTO address) {
+    public void setAddress(AddressEntity address) {
         this.address = address;
     }
 
-    public List<RoomDTO> getRooms() {
+    public List<RoomEntity> getRooms() {
         return rooms;
     }
 
-    public void setRooms(List<RoomDTO> rooms) {
+    public void setRooms(List<RoomEntity> rooms) {
         this.rooms = rooms;
     }
 
-    public HotelDTO() {
+    public HotelEntity() {
 
     }
 
-    public HotelDTO(Long hotelId, String name, String phoneNumber, int starRatting, AddressDTO address) {
+    public HotelEntity(Long hotelId, String name, String phoneNumber, int starRatting, AddressEntity address) {
         this.hotelId = hotelId;
         this.name = name;
         this.phoneNumber = phoneNumber;

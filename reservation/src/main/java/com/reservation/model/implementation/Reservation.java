@@ -4,7 +4,6 @@ import com.reservation.model.ICard;
 import com.reservation.model.IReservation;
 import com.reservation.proxy.model.guest.IGuest;
 import com.reservation.proxy.model.hotel.IHotel;
-import jdk.nashorn.internal.runtime.JSErrorType;
 
 import java.util.Date;
 
@@ -14,11 +13,21 @@ public class Reservation implements IReservation {
     private Long guestId;
     private Long hotelId;
     private Long reservationId;
-    private String state;
+    private ReservationStatus state;
     private String roomType;
     private IGuest guest;
     private IHotel hotel;
+    private double amount;
+
     private ICard card;
+
+    public double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
 
     public ICard getCard() {
         return card;
@@ -94,15 +103,15 @@ public class Reservation implements IReservation {
         this.reservationId = reservationId;
     }
 
-    public String getState() {
+    public ReservationStatus getState() {
         return state;
     }
 
-    public void setState(String state) {
+    public void setState(ReservationStatus state) {
         this.state = state;
     }
 
-    public Reservation(Date fromDate, Date toDate, Long guestId, Long hotelId, Long reservationId, String state, String roomType, ICard card) {
+    public Reservation(Date fromDate, Date toDate, Long guestId, Long hotelId, Long reservationId, ReservationStatus state, String roomType, ICard card) {
         this.fromDate = fromDate;
         this.toDate = toDate;
         this.guestId = guestId;
@@ -111,5 +120,21 @@ public class Reservation implements IReservation {
         this.state = state;
         this.roomType = roomType;
         this.card = card;
+    }
+
+    @Override
+    public String toString() {
+        return "Reservation{" +
+                "fromDate=" + fromDate +
+                ", toDate=" + toDate +
+                ", guestId=" + guestId +
+                ", hotelId=" + hotelId +
+                ", reservationId=" + reservationId +
+                ", state='" + state + '\'' +
+                ", roomType='" + roomType + '\'' +
+                ", guest=" + guest +
+                ", hotel=" + hotel +
+                ", card=" + card +
+                '}';
     }
 }

@@ -3,6 +3,7 @@ package com.reservation.proxy.model.guest.implementation;
 import com.reservation.proxy.model.guest.IGuest;
 import com.reservation.proxy.model.payment.ICard;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Guest implements IGuest {
@@ -13,9 +14,17 @@ public class Guest implements IGuest {
     private String contactNumber;
     private int ratting;
     private List<ICard> card;
-
+    private List<Long> reservations =  new ArrayList<>();
     public List<ICard> getCard() {
         return card;
+    }
+
+    public void setReservations(List<Long> reservations) {
+        this.reservations = reservations;
+    }
+
+    public List<Long> getReservations() {
+        return reservations;
     }
 
     public void setCard(List<ICard> card) {

@@ -1,6 +1,6 @@
 package com.guest.repository.implementation;
 
-import com.guest.dto.GuestDTO;
+import com.guest.entity.GuestEntity;
 import com.guest.repository.IGuestRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,21 +24,21 @@ public class GuestRepositoryTest {
     @Autowired
     private GuestRepository guestRepositoryImpl;
 
-    private GuestDTO guestDTO =  new GuestDTO(1L, "Jayant","jayant@gmail.com", "1234567");
+    private GuestEntity guestEntity =  new GuestEntity(1L, "Jayant","jayant@gmail.com", "1234567");
 
     @Test
     public void save() {
-        given(repository.save(any())).willReturn(guestDTO);
-        GuestDTO save = guestRepositoryImpl.save(guestDTO);
+        given(repository.save(any())).willReturn(guestEntity);
+        GuestEntity save = guestRepositoryImpl.save(guestEntity);
 
-        assertEquals(save.getGuestId(), guestDTO.getGuestId());
+        assertEquals(save.getGuestId(), guestEntity.getGuestId());
 
     }
 
     @Test
     public  void findById() {
-        given(repository.findById(anyLong())).willReturn(java.util.Optional.ofNullable(guestDTO));
-        GuestDTO byId = guestRepositoryImpl.findById(1L);
-        assertEquals(byId.getGuestId(), guestDTO.getGuestId());
+        given(repository.findById(anyLong())).willReturn(java.util.Optional.ofNullable(guestEntity));
+        GuestEntity byId = guestRepositoryImpl.findById(1L);
+        assertEquals(byId.getGuestId(), guestEntity.getGuestId());
     }
 }

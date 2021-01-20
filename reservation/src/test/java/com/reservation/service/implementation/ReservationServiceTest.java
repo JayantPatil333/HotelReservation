@@ -1,12 +1,14 @@
 package com.reservation.service.implementation;
 
 
-import com.reservation.dto.CardDTO;
-import com.reservation.dto.ReservationDTO;
+import com.reservation.entity.CardEntity;
+import com.reservation.entity.ReservationEntity;
+import com.reservation.exception.ReservationEntityNotFoundException;
 import com.reservation.model.ICard;
 import com.reservation.model.IReservation;
 import com.reservation.model.implementation.Card;
 import com.reservation.model.implementation.Reservation;
+import com.reservation.model.implementation.ReservationStatus;
 import com.reservation.proxy.IGuestInformationProxy;
 import com.reservation.proxy.IHotelInformationProxy;
 import com.reservation.proxy.IPaymentServiceProxy;
@@ -31,6 +33,7 @@ import javax.persistence.EntityNotFoundException;
 
 import java.util.Date;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
@@ -60,19 +63,19 @@ public class ReservationServiceTest {
     private IAddress iAddress = new Address(1L, "Lane no 5", "Hanuman Nagar", "Pune");
     private IHotel iHotel = new Hotel(1L, "City Inn", "1234567890", 3, iAddress);;
     private ICard card =  new Card("1234567890","12","2024");
-    private IReservation reservation = new Reservation(new Date(), new Date(), 1L, 1L, 1L, "REQUEST","SINGLE", card);
-    private ReservationDTO reservationDTO =  new ReservationDTO(new Date(), new Date(), 1L, 1L, 1L, "REQUEST", new CardDTO(card.getCardNumber(), card.getExpMonth(), card.getExpYear()));
+    private IReservation reservation = new Reservation(new Date(), new Date(), 1L, 1L, 1L, ReservationStatus.REQUEST,"SINGLE", card);
+    private ReservationEntity reservationEntity =  new ReservationEntity(new Date(), new Date(), 1L, 1L, 1L, "REQUEST", new CardEntity(card.getCardNumber(), card.getExpMonth(), card.getExpYear()));
 
 
     @Test
-    public void getGuestById() {
-        given(guestProxy.getGuest(anyLong())).willReturn(iGuest);
+    public void getGuestById() throws Exception {
+        given(guestProxy.getGuest(anyLong())).willReturn(ResponseEntity.ok(iGuest));
         IGuest guest = reservationService.getGuestById(1L);
         assertTrue(guest.getGuestId().equals(1L));
     }
 
     @Test(expected = EntityNotFoundException.class)
-    public void getGuestById_EntityNotFound() {
+    public void getGuestById_EntityNotFound() throws Exception {
         given(guestProxy.getGuest(anyLong())).willThrow(new EntityNotFoundException("Guest not found"));
         reservationService.getGuestById(1L);
     }
@@ -86,68 +89,80 @@ public class ReservationServiceTest {
     }
 
     @Test
-    public void requestForReservation() {
-        given(reservationRepository.save(any())).willReturn(reservationDTO);
-        given(hotelProxy.reservationRequest(any(), anyLong())).willReturn("Request submitted.");
+    public void requestForReservation() throws Exception {
+        given(reservationRepository.save(any())).willReturn(reservationEntity);
+        given(hotelProxy.reservationRequest(any(), anyLong())).willReturn(ResponseEntity.accepted().build());
         reservationService.requestForReservation(reservation);
         verify(hotelProxy).reservationRequest(any(), anyLong());
     }
 
     @Test
-    public void confirmReservation() {
-        given(hotelProxy.confirmReservation(anyLong())).willReturn("SUCCESS");
-        given(guestProxy.addStayByGuest(anyLong(), anyLong())).willReturn(ResponseEntity.ok("SUCCESS"));
-        given(reservationRepository.getReservationById(anyLong())).willReturn(reservationDTO);
-        IReservation reservation = reservationService.confirmReservation(this.reservation);
-        verify(hotelProxy).confirmReservation(anyLong());
+    public void confirmReservation() throws ReservationEntityNotFoundException {
+        given(hotelProxy.updateReservation(anyLong(),any())).willReturn(ResponseEntity.accepted().build());
+        given(guestProxy.addStayByGuest(anyLong(), anyLong())).willReturn(ResponseEntity.ok(iGuest));
+        given(guestProxy.addNewCard(anyLong(),any())).willReturn(ResponseEntity.ok(iGuest));
+        given(reservationRepository.getReservationById(anyLong())).willReturn(reservationEntity);
+        given(paymentProxy.doPayment(any(), anyDouble())).willReturn("SUCCESS");
+        reservation.setState(ReservationStatus.CONFIRM);
+        IReservation reservation = reservationService.updateReservation(this.reservation);
+        verify(hotelProxy).updateReservation(anyLong(),any());
         verify(guestProxy).addStayByGuest(anyLong(), anyLong());
         verify(reservationRepository).getReservationById(anyLong());
+        verify(paymentProxy).doPayment(any(),anyDouble());
 
-        assertTrue(reservation.getState().equals("CONFIRMED"));
+        assertTrue(reservation.getState().equals(ReservationStatus.CONFIRM));
     }
 
     @Test
     public void doPayment() {
-        given(reservationRepository.getReservationById(anyLong())).willReturn(reservationDTO);
+        given(reservationRepository.getReservationById(anyLong())).willReturn(reservationEntity);
         given(paymentProxy.doPayment(any(), anyDouble())).willReturn("SUCCESS");
         reservationService.doPayment(card, 500, 1L);
         verify(paymentProxy).doPayment(any(), anyDouble());
     }
 
     @Test
-    public void getReservation() {
-        given(reservationRepository.getReservationById(anyLong())).willReturn(reservationDTO);
+    public void getReservation() throws Exception {
+        given(reservationRepository.getReservationById(anyLong())).willReturn(reservationEntity);
         reservationService.getReservation(1L, false);
         verify(hotelProxy,times(0)).getHotelById(anyLong());
         verify(guestProxy, times(0)).getGuest(anyLong());
     }
 
     @Test
-    public void getReservation_GetDetails() {
-        given(reservationRepository.getReservationById(anyLong())).willReturn(reservationDTO);
-        given(guestProxy.getGuest(anyLong())).willReturn(iGuest);
+    public void getReservation_GetDetails() throws Exception {
+        given(reservationRepository.getReservationById(anyLong())).willReturn(reservationEntity);
+        given(guestProxy.getGuest(anyLong())).willReturn(ResponseEntity.ok(iGuest));
         given(hotelProxy.getHotelById(anyLong())).willReturn(iHotel);
         reservationService.getReservation(1L, true);
         verify(hotelProxy).getHotelById(anyLong());
         verify(guestProxy).getGuest(anyLong());
     }
 
+
     @Test
-    public void doPaymentFallBack() {
+    public void getReservationsByGuestId() {
+        iGuest.getReservations().add(1l);
+        given(guestProxy.getGuest(anyLong())).willReturn(ResponseEntity.ok(iGuest));
+        given(reservationRepository.getReservationById(anyLong())).willReturn(reservationEntity);
+        com.reservation.model.IGuest reservationsByGuestId = reservationService.getReservationsByGuestId(1l);
+
+        assertFalse(reservationsByGuestId.getReservations().isEmpty());
+        assertTrue(reservationsByGuestId.getReservations().stream().filter(r -> r.getReservationId().equals(1l)).findFirst().isPresent());
+
     }
 
     @Test
-    public void cancelReservation() throws Exception {
-        CardDTO cardDTO =  new CardDTO(card.getCardNumber(), card.getExpMonth(), card.getExpYear());
-        reservationDTO.setCard(cardDTO);
-        given(reservationRepository.getReservationById(anyLong())).willReturn(reservationDTO);
-        given(hotelProxy.cancelReservation(anyLong(), anyLong())).willReturn(ResponseEntity.accepted().build());
+    public void cancelReservation() throws Exception, ReservationEntityNotFoundException {
+        CardEntity cardEntity =  new CardEntity(card.getCardNumber(), card.getExpMonth(), card.getExpYear());
+        reservationEntity.setCard(cardEntity);
+        given(reservationRepository.getReservationById(anyLong())).willReturn(reservationEntity);
+        given(hotelProxy.updateReservation(anyLong(), any())).willReturn(ResponseEntity.accepted().build());
         given(paymentProxy.revertPayment(any(), anyDouble())).willReturn("SUCCESS");
-
-        reservationService.cancelReservation(1L, 500);
-
+        reservation.setState(ReservationStatus.CANCELLED);
+        reservationService.updateReservation(reservation);
         verify(reservationRepository).getReservationById(anyLong());
-        verify(hotelProxy).cancelReservation(anyLong(), anyLong());
+        verify(hotelProxy).updateReservation(anyLong(), any());
         verify(paymentProxy).revertPayment(any(), anyDouble());
     }
 
