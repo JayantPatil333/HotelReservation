@@ -89,7 +89,7 @@ public class ReservationServiceTest {
     }
 
     @Test
-    public void requestForReservation() throws Exception {
+    public void requestForReservation() {
         given(reservationRepository.save(any())).willReturn(reservationEntity);
         given(hotelProxy.reservationRequest(any(), anyLong())).willReturn(ResponseEntity.accepted().build());
         reservationService.requestForReservation(reservation);
@@ -114,15 +114,20 @@ public class ReservationServiceTest {
     }
 
     @Test
-    public void doPayment() {
+    public void doPayment() throws ReservationEntityNotFoundException {
         given(reservationRepository.getReservationById(anyLong())).willReturn(reservationEntity);
         given(paymentProxy.doPayment(any(), anyDouble())).willReturn("SUCCESS");
         reservationService.doPayment(card, 500, 1L);
         verify(paymentProxy).doPayment(any(), anyDouble());
     }
 
+    @Test(expected = ReservationEntityNotFoundException.class)
+    public void getReservation_NotFound() throws ReservationEntityNotFoundException {
+        given(reservationRepository.getReservationById(anyLong())).willThrow(ReservationEntityNotFoundException.class);
+        reservationService.getReservation(1L, false);
+    }
     @Test
-    public void getReservation() throws Exception {
+    public void getReservation() throws ReservationEntityNotFoundException {
         given(reservationRepository.getReservationById(anyLong())).willReturn(reservationEntity);
         reservationService.getReservation(1L, false);
         verify(hotelProxy,times(0)).getHotelById(anyLong());
@@ -130,7 +135,7 @@ public class ReservationServiceTest {
     }
 
     @Test
-    public void getReservation_GetDetails() throws Exception {
+    public void getReservation_GetDetails() throws ReservationEntityNotFoundException {
         given(reservationRepository.getReservationById(anyLong())).willReturn(reservationEntity);
         given(guestProxy.getGuest(anyLong())).willReturn(ResponseEntity.ok(iGuest));
         given(hotelProxy.getHotelById(anyLong())).willReturn(iHotel);
@@ -141,7 +146,7 @@ public class ReservationServiceTest {
 
 
     @Test
-    public void getReservationsByGuestId() {
+    public void getReservationsByGuestId() throws ReservationEntityNotFoundException {
         iGuest.getReservations().add(1l);
         given(guestProxy.getGuest(anyLong())).willReturn(ResponseEntity.ok(iGuest));
         given(reservationRepository.getReservationById(anyLong())).willReturn(reservationEntity);

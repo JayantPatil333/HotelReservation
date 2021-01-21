@@ -102,7 +102,7 @@ public class ReservationControllerTest {
     }*/
 
     @Test
-    public void getReservation() throws Exception {
+    public void getReservation() throws Exception, ReservationEntityNotFoundException {
         given(reservationService.getReservation(anyLong(), anyBoolean())).willReturn(reservation);
         mockMvc.perform(get("/reservations/{id}","1")
                 .param("isDetailsRequired","false")
@@ -131,7 +131,7 @@ public class ReservationControllerTest {
     }
 
     @Test
-    public void getReservationsByGuestId() throws Exception {
+    public void getReservationsByGuestId() throws Exception, ReservationEntityNotFoundException {
         IGuest guest =  new Guest(1l, "Jayant","jayant@gmail.com", "123456789", 3, new ArrayList<>());
         given(reservationService.getReservationsByGuestId(anyLong())).willReturn(guest);
 

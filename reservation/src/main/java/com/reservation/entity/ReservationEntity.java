@@ -1,9 +1,16 @@
 package com.reservation.entity;
 
 
+import lombok.*;
+
 import javax.persistence.*;
 import java.util.Date;
 
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
 @Entity
 @Table(name = "Reservation")
 public class ReservationEntity {
@@ -22,73 +29,6 @@ public class ReservationEntity {
     private CardEntity card;
 
     private double amount;
-
-    public double getAmount() {
-        return amount;
-    }
-
-    public void setAmount(double amount) {
-        this.amount = amount;
-    }
-
-    public CardEntity getCard() {
-        return card;
-    }
-
-    public void setCard(CardEntity card) {
-        this.card = card;
-    }
-
-    public Date getFromDate() {
-        return fromDate;
-    }
-
-    public void setFromDate(Date fromDate) {
-        this.fromDate = fromDate;
-    }
-
-    public Date getToDate() {
-        return toDate;
-    }
-
-    public void setToDate(Date toDate) {
-        this.toDate = toDate;
-    }
-
-    public Long getGuestId() {
-        return guestId;
-    }
-
-    public void setGuestId(Long guestId) {
-        this.guestId = guestId;
-    }
-
-    public Long getHotelId() {
-        return hotelId;
-    }
-
-    public void setHotelId(Long hotelId) {
-        this.hotelId = hotelId;
-    }
-
-    public Long getReservationId() {
-        return reservationId;
-    }
-
-    public void setReservationId(Long reservationId) {
-        this.reservationId = reservationId;
-    }
-
-    public String getState() {
-        return state;
-    }
-
-    public void setState(String state) {
-        this.state = state;
-    }
-
-    public ReservationEntity() {
-    }
 
     public ReservationEntity(Date fromDate, Date toDate, Long guestId, Long hotelId, Long reservationId, String state, CardEntity card) {
         this.fromDate = fromDate;

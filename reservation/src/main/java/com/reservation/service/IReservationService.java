@@ -11,15 +11,15 @@ public interface IReservationService {
 
     public IHotel getHotelById(Long hotelId);
 
-    public IReservation requestForReservation(IReservation reservation) throws Exception;
+    public IReservation requestForReservation(IReservation reservation);
 
     public IReservation updateReservation(IReservation reservation) throws ReservationEntityNotFoundException;
 
     public String doPayment(ICard card, double amount, Long reservationId);
 
-    public IReservation getReservation(Long id, boolean isDetailsRequired) throws Exception;
+    public IReservation getReservation(Long id, boolean isDetailsRequired) throws ReservationEntityNotFoundException;
 
-    com.reservation.model.IGuest getReservationsByGuestId(Long guestId);
+    com.reservation.model.IGuest getReservationsByGuestId(Long guestId) throws ReservationEntityNotFoundException;
 
     //public IReservation cancelReservation(Long id, double amount) throws Exception;
 }

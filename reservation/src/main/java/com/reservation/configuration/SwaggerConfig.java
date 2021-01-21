@@ -33,8 +33,8 @@ public class SwaggerConfig {
     }
 
     private ApiInfo apiInfo() {
-        return new ApiInfoBuilder().title("Guest Service API")
-                                    .description("Guest Service API reference guide")
+        return new ApiInfoBuilder().title("Reservation Service API")
+                                    .description("Reservation Service API reference guide")
                                     .build();
     }
 

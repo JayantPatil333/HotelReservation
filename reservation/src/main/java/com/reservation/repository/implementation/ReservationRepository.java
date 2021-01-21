@@ -1,6 +1,7 @@
 package com.reservation.repository.implementation;
 
 import com.reservation.entity.ReservationEntity;
+import com.reservation.exception.ReservationEntityNotFoundException;
 import com.reservation.repository.IReservationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -18,8 +19,8 @@ public class ReservationRepository {
         return  reservationRepository.save(input);
     }
 
-    public ReservationEntity getReservationById(Long id){
+    public ReservationEntity getReservationById(Long id) throws ReservationEntityNotFoundException {
         Optional<ReservationEntity> reservationDTO = reservationRepository.findById(id);
-        return reservationDTO.isPresent() ? reservationDTO.get(): reservationDTO.orElseThrow(() ->new EntityNotFoundException("Reservation Entity not found for ID "+id));
+        return reservationDTO.isPresent() ? reservationDTO.get(): reservationDTO.orElseThrow(() ->new ReservationEntityNotFoundException("Reservation Entity not found for ID "+id));
     }
 }

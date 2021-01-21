@@ -2,11 +2,14 @@ package com.reservation.model;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.reservation.model.implementation.Guest;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.util.List;
 
 @JsonDeserialize(as = Guest.class)
 public interface IGuest {
+
     public Long getGuestId();
 
     public void setGuestId(Long guestId);
