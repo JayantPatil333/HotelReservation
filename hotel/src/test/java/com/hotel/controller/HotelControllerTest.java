@@ -6,6 +6,8 @@ import com.hotel.model.IHotel;
 import com.hotel.model.IReservation;
 import com.hotel.model.implementation.*;
 import com.hotel.services.IHotelService;
+import com.jayway.jsonpath.DocumentContext;
+import com.jayway.jsonpath.JsonPath;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,6 +23,7 @@ import org.springframework.web.context.WebApplicationContext;
 import java.util.Arrays;
 import java.util.Date;
 
+import static com.toomuchcoding.jsonassert.JsonAssertion.assertThatJson;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
@@ -58,13 +61,17 @@ public class HotelControllerTest {
         given(service.addNewHotel(any())).willReturn(hotel);
         ObjectMapper mapper =  new ObjectMapper();
         String json =  mapper.writeValueAsString(hotel);
-        mockMvc.perform(post("/hotels")
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(json)
-                        .with(user("Hotel")
-                                .password("password")
-                                .roles("HOTEL")))
-                        .andExpect(status().isCreated());
+        String response = mockMvc.perform(post("/hotels")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(json)
+                .with(user("Hotel")
+                        .password("password")
+                        .roles("HOTEL")))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+
+        DocumentContext parsedJson = JsonPath.parse(response);
+        assertThatJson(parsedJson).field("['status']").isEqualTo("CREATED");
+
     }
 
     @Test
@@ -123,14 +130,16 @@ public class HotelControllerTest {
         given(service.updateReservation(anyLong(), any())).willReturn(reservation);
         ObjectMapper mapper =  new ObjectMapper();
         String input =  mapper.writeValueAsString(reservation);
-        mockMvc.perform(put("/hotels/{hotelId}/reservation", "1")
+        String response = mockMvc.perform(put("/hotels/{hotelId}/reservation", "1")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(input)
                 .with(user("Guest")
                         .password("password")
                         .roles("GUEST")))
-                .andExpect(status().isAccepted());
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
 
+        DocumentContext parsedJson = JsonPath.parse(response);
+        assertThatJson(parsedJson).field("['status']").isEqualTo("ACCEPTED");
     }
 
     @Test

@@ -14,6 +14,7 @@ import com.reservation.proxy.IPaymentServiceProxy;
 import com.reservation.proxy.model.hotel.IHotel;
 
 import com.reservation.repository.implementation.ReservationRepository;
+import com.reservation.response.ApiResponseImpl;
 import com.reservation.service.IReservationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,8 +57,8 @@ public class ReservationService implements IReservationService {
      * @return IGuest, Holds information related to Guest.
      */
     public com.reservation.proxy.model.guest.IGuest getGuestById(Long guestId){
-        ResponseEntity<com.reservation.proxy.model.guest.IGuest> guestResponseEntity = guestProxy.getGuest(guestId);
-        return guestResponseEntity.getBody();
+        ApiResponseImpl<com.reservation.proxy.model.guest.IGuest> guestResponseEntity = guestProxy.getGuest(guestId);
+        return guestResponseEntity.getActualResponse();
     }
 
     /**
@@ -67,7 +68,7 @@ public class ReservationService implements IReservationService {
      * @return IHotel, Holds hotel information.
      */
     public IHotel getHotelById(Long hotelId){
-        return hotelProxy.getHotelById(hotelId);
+        return hotelProxy.getHotelById(hotelId).getActualResponse();
     }
 
     /**

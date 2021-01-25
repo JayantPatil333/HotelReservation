@@ -6,6 +6,8 @@ import com.guest.model.IGuest;
 import com.guest.model.implementation.Card;
 import com.guest.model.implementation.Guest;
 import com.guest.service.IGuestService;
+import com.jayway.jsonpath.DocumentContext;
+import com.jayway.jsonpath.JsonPath;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,6 +27,7 @@ import javax.persistence.EntityNotFoundException;
 
 import java.util.Arrays;
 
+import static com.toomuchcoding.jsonassert.JsonAssertion.assertThatJson;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -58,12 +61,18 @@ public class GuestControllerTest {
     @Test
     public void getGuest_ShouldReturnGuest() throws Exception {
         given(guestService.getGuest(1L)).willReturn(guest);
-        mockMvc.perform(MockMvcRequestBuilders.get("/guests/{guestId}", "1")
+        String response = mockMvc.perform(get("/guests/{guestId}", "1")
                 .with(user("Guest")
                         .password("password")
                         .roles("GUEST")))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("name").value("Jayant"));
+                .andReturn().getResponse().getContentAsString();
+
+        DocumentContext parsedJson = JsonPath.parse(response);
+        assertThatJson(parsedJson).field("['status']").isEqualTo("OK");
+        assertThatJson(parsedJson).field("['actualResponse']").field("['name']").isEqualTo("Jayant");
+        assertThatJson(parsedJson).field("['actualResponse']").field("['guestId']").isEqualTo("1");
+
 
     }
 
@@ -98,13 +107,17 @@ public class GuestControllerTest {
         given(guestService.addNewGuest(any())).willReturn(guest);
         ObjectMapper mapper =  new ObjectMapper();
         String json = mapper.writeValueAsString(guest);
-        mockMvc.perform(post("/guests")
+        String response = mockMvc.perform(post("/guests")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(json)
                 .with(user("Guest")
                         .password("password")
                         .roles("GUEST")))
-                .andExpect(status().isCreated());
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        DocumentContext parsedJson = JsonPath.parse(response);
+        assertThatJson(parsedJson).field("['status']").isEqualTo("CREATED");
 
     }
 

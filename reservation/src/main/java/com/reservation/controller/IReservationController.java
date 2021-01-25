@@ -6,6 +6,7 @@ import com.reservation.model.IGuest;
 import com.reservation.model.IReservation;
 import com.reservation.response.ApiResponseImpl;
 import io.swagger.annotations.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,7 +25,10 @@ public interface IReservationController {
      * @return IReservation, holds information of reservation as well as hotel and guest.
      * @throws ReservationEntityNotFoundException
      */
-    @ApiOperation(value = "To get reservation information by id.")
+    @ApiOperation(value = "To get reservation information by id.",
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            response = ApiResponseImpl.class
+    )
     @ApiResponses({
             @ApiResponse(code = 200, message = "Reservation fetched successfully.", response = ApiResponseImpl.class),
             @ApiResponse(code = 403, message = "Not authorized to do this operation", response = ApiResponseImpl.class),
@@ -38,7 +42,10 @@ public interface IReservationController {
      * @param reservation , reservation information to store.
      * @return IReservation, hold reservation information that get stored.
      */
-    @ApiOperation(value = "Create new reservation.")
+    @ApiOperation(  value = "Create new reservation.",
+                    consumes = MediaType.APPLICATION_JSON_VALUE,
+                    response = ApiResponseImpl.class
+    )
     @ApiResponses({
             @ApiResponse(code = 201, message = "Reservation created successfully.", response = ApiResponseImpl.class),
             @ApiResponse(code = 403, message = "Not authorized to do this operation", response = ApiResponseImpl.class),
@@ -54,7 +61,10 @@ public interface IReservationController {
      * @return IReservation, reservation information that get updated.
      * @throws ReservationEntityNotFoundException
      */
-    @ApiOperation(value = "Update reservation.")
+    @ApiOperation(  value = "Update reservation.",
+                    consumes = MediaType.APPLICATION_JSON_VALUE,
+                    response =  ApiResponseImpl.class
+    )
     @ApiResponses({
             @ApiResponse(code = 202, message = "Reservation updated successfully.", response = ApiResponseImpl.class),
             @ApiResponse(code = 403, message = "Not authorized to do this operation", response = ApiResponseImpl.class),
@@ -69,7 +79,10 @@ public interface IReservationController {
      * @param guestId , guest id for which reservation information needs to fetch.
      * @return IGuest, Holds information of Guest as well as Reservations that guest made.
      */
-    @ApiOperation(value = "Get reservation history for Guest")
+    @ApiOperation(value = "Get reservation history for Guest",
+                    produces = MediaType.APPLICATION_JSON_VALUE,
+                    response = ApiResponseImpl.class
+    )
     @ApiResponses({
             @ApiResponse(code = 200, message = "Reservation information fetched successfully.", response = ApiResponseImpl.class),
             @ApiResponse(code = 403, message = "Not authorized to do this operation", response = ApiResponseImpl.class),
@@ -79,5 +92,9 @@ public interface IReservationController {
     @GetMapping(value = "/guests/{guestId}")
     @PreAuthorize("hasRole('GUEST')")
     public ApiResponseImpl<IGuest> getReservationsByGuestId(@PathVariable("guestId") Long guestId) throws ReservationEntityNotFoundException;
+
+    @GetMapping(value = "/guests/get/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasRole('GUEST')")
+    public ApiResponseImpl getGuest(@PathVariable("id") Long id);
 
 }

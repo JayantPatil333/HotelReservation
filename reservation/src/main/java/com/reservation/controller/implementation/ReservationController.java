@@ -6,10 +6,16 @@ import com.reservation.exception.ReservationEntityNotFoundException;
 import com.reservation.model.IGuest;
 import com.reservation.model.IReservation;
 
+import com.reservation.proxy.IHotelInformationProxy;
 import com.reservation.response.ApiResponseImpl;
 import com.reservation.service.IReservationService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import javax.inject.Inject;
 
@@ -50,4 +56,20 @@ public class ReservationController implements IReservationController {
         IGuest guest = reservationService.getReservationsByGuestId(guestId);
         return generateApiResponse(guest, HttpStatus.OK);
     }
+
+    @Autowired
+    private IHotelInformationProxy hotelProxy;
+
+    @Override
+    public ApiResponseImpl getGuest(Long id){
+
+        RestTemplate restTemplate = new RestTemplate();
+        String getGuestURL = "http://localhost:8081/guests";
+        //HttpHeaders headers = new HttpHeaders();
+        //headers.setBearerAuth("Bearer ");
+        //HttpEntity entity =  new HttpEntity(headers);
+        return restTemplate.getForObject(getGuestURL+"/"+id,ApiResponseImpl.class);
+        //return hotelProxy.getHotelById(id);
+    }
+
 }
