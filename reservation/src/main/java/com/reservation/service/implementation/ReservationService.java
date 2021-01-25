@@ -4,6 +4,8 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.reservation.entity.ReservationEntity;
 import com.reservation.exception.ReservationEntityNotFoundException;
 import com.reservation.mapper.IMapper;
+import com.reservation.message.model.PaymentPayload;
+import com.reservation.message.service.PaymentService;
 import com.reservation.model.ICard;
 import com.reservation.model.IGuest;
 import com.reservation.model.IReservation;
@@ -47,6 +49,9 @@ public class ReservationService implements IReservationService {
 
     @Inject
     private IMapper mapper;
+
+    @Autowired
+    private PaymentService paymentService;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ReservationService.class);
 
@@ -134,6 +139,8 @@ public class ReservationService implements IReservationService {
      */
     @HystrixCommand(fallbackMethod = "doPaymentFallBack")
     public String doPayment(ICard card, double amount, Long reservationId){
+        PaymentPayload paymentPayload = new PaymentPayload(reservationId, amount, card) ;
+        paymentService.sendPaymentRequest(paymentPayload);
         return paymentServiceProxy.doPayment(mapper.mapICardToProxy(card), amount);
     }
 

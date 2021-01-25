@@ -1,13 +1,10 @@
 package com.reservation.controller;
 
-import com.reservation.exception.ApiError;
 import com.reservation.exception.ReservationEntityNotFoundException;
 import com.reservation.model.IGuest;
 import com.reservation.model.IReservation;
 import com.reservation.response.ApiResponseImpl;
 import io.swagger.annotations.*;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -95,6 +92,6 @@ public interface IReservationController {
 
     @GetMapping(value = "/guests/get/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('GUEST')")
-    public ApiResponseImpl getGuest(@PathVariable("id") Long id);
+    public ApiResponseImpl<IGuest> getGuest(@PathVariable("id") Long id);
 
 }
