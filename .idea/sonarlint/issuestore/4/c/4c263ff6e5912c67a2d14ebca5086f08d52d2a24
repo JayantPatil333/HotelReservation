@@ -1,0 +1,17 @@
+
+[
+java:S1192"HDefine a constant instead of duplicating this literal "SUCCESS" 3 times.(»¶ék
+Y	java:S112"FDefine and throw a dedicated exception instead of using a generic one.(É ¾
+^	java:S112"FDefine and throw a dedicated exception instead of using a generic one.(ğŸá‹şÿÿÿÿ
+^	java:S112"FDefine and throw a dedicated exception instead of using a generic one.(ÆÈô»üÿÿÿÿ
+_
+java:S1128"FRemove this unused import 'org.checkerframework.checker.units.qual.A'.(¿‚áñøÿÿÿÿ
+]
+java:S1128"DRemove this unused import 'org.springframework.http.ResponseEntity'.(¶¯ø¦úÿÿÿÿ
+5
+java:S1116"Remove this empty statement.(é€¬ôúÿÿÿÿ
+f	java:S100"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ğŸá‹şÿÿÿÿ
+R
+java:S1117"?Rename "reservation" which hides the field declared at line 72.(”±›m
+f	java:S100"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(£Ñœ‚úÿÿÿÿ
+a	java:S100"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(É–î¾

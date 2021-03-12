@@ -1,0 +1,21 @@
+
+[
+java:S1192E"FDefine a constant instead of duplicating this literal "HOTEL" 4 times.(áÉÿv
+\
+java:S1192W"FDefine a constant instead of duplicating this literal "GUEST" 4 times.(´ì‚Ô
+_
+java:S1192D"IDefine a constant instead of duplicating this literal "password" 8 times.(«‡…ö
+a
+java:S1192U"FDefine a constant instead of duplicating this literal "Guest" 4 times.(€ËÆ³ýÿÿÿÿ
+a
+java:S1192C"FDefine a constant instead of duplicating this literal "Hotel" 4 times.(œôÕ©þÿÿÿÿ
+[	java:S112<"FDefine and throw a dedicated exception instead of using a generic one.(ÝŠ…ï
+[	java:S112N"FDefine and throw a dedicated exception instead of using a generic one.(¿—¼
+[	java:S112\"FDefine and throw a dedicated exception instead of using a generic one.(Î»ñ„
+[	java:S112k"FDefine and throw a dedicated exception instead of using a generic one.(›‘×¢
+[	java:S112u"FDefine and throw a dedicated exception instead of using a generic one.(â¸ô
+a	java:S112€"FDefine and throw a dedicated exception instead of using a generic one.(‰“¼­þÿÿÿÿ
+a	java:S112’"FDefine and throw a dedicated exception instead of using a generic one.(®ÄÄöþÿÿÿÿ
+\	java:S112ž"FDefine and throw a dedicated exception instead of using a generic one.(ãûº 
+c	java:S100\"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Î»ñ„
+i	java:S100€"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(‰“¼­þÿÿÿÿ

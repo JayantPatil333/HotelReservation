@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/HotelReservation.iml" filepath="$PROJECT_DIR$/.idea/HotelReservation.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MyHotelReservationApplication/MyHotelReservationApplication.iml" filepath="$PROJECT_DIR$/MyHotelReservationApplication/MyHotelReservationApplication.iml" />
+      <module fileurl="file://$PROJECT_DIR$/reservationsystems-jayant/eureka/eureka.iml" filepath="$PROJECT_DIR$/reservationsystems-jayant/eureka/eureka.iml" />
+      <module fileurl="file://$PROJECT_DIR$/reservationsystems-jayant/guest/guest.iml" filepath="$PROJECT_DIR$/reservationsystems-jayant/guest/guest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/reservationsystems-jayant/hotel/hotel.iml" filepath="$PROJECT_DIR$/reservationsystems-jayant/hotel/hotel.iml" />
+      <module fileurl="file://$PROJECT_DIR$/reservationsystems-jayant/payment-service/payment-service.iml" filepath="$PROJECT_DIR$/reservationsystems-jayant/payment-service/payment-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/reservationsystems-jayant/reservation/reservation.iml" filepath="$PROJECT_DIR$/reservationsystems-jayant/reservation/reservation.iml" />
+      <module fileurl="file://$PROJECT_DIR$/reservationsystems-jayant/reservationsystems-jayant.iml" filepath="$PROJECT_DIR$/reservationsystems-jayant/reservationsystems-jayant.iml" />
+      <module fileurl="file://$PROJECT_DIR$/reservationsystems-jayant/zuul/zuul.iml" filepath="$PROJECT_DIR$/reservationsystems-jayant/zuul/zuul.iml" />
+    </modules>
+  </component>
+</project>

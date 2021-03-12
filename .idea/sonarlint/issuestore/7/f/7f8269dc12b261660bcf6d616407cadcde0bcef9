@@ -1,0 +1,12 @@
+
+Y	java:S112"FDefine and throw a dedicated exception instead of using a generic one.(Þ˜Î½
+\
+java:S1128"HRemove this unused import 'com.fasterxml.jackson.databind.ObjectMapper'.(´‘¨™
+i
+java:S1128"PRemove this unused import 'org.springframework.mock.web.MockHttpServletRequest'.(Žµä’þÿÿÿÿ
+€
+java:S1128"gRemove this unused import 'org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder'.(ËÀ¥Åýÿÿÿÿ
+C
+java:S1128"*Remove this unused import 'java.util.Map'.(¼è½Òþÿÿÿÿ
+i	java:S116"QRename this field "LOGGER" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ŸØÅ†ûÿÿÿÿ
+N	java:S125"<This block of commented-out lines of code should be removed.(Øÿ¯k
